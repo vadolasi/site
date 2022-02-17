@@ -1,0 +1,6 @@
+{
+  "**/*.{ts,js}": [
+    "yarn lint:ci",
+    "yarn test:ci"
+  ]
+}

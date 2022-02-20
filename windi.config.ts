@@ -1,5 +1,6 @@
 import { defineConfig } from "windicss/helpers"
 
 export default defineConfig({
-  darkMode: "class"
+  darkMode: "class",
+  attributify: true
 })

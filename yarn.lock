@@ -856,6 +856,16 @@
     webpack-virtual-modules "^0.4.3"
     webpackbar "^5.0.2"
 
+"@nuxtjs/color-mode@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/@nuxtjs/color-mode/-/color-mode-3.0.0.tgz#c5ba5c24f23148bfc5c8b4af02c5f7f1a0186a06"
+  integrity sha512-R3GxWl9+wOx/kAB9QLOJYW35knnRiKfRTTt+tkKyxsW0QQRiAAURZHr4BoJZeQtaEoneuRmJV99/p07/ehJcUw==
+  dependencies:
+    "@nuxt/kit" "npm:@nuxt/kit-edge@latest"
+    defu "^5.0.0"
+    lodash.template "^4.5.0"
+    pathe "^0.2.0"
+
 "@polka/url@^1.0.0-next.20":
   version "1.0.0-next.21"
   resolved "https://registry.npmjs.org/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
@@ -1465,10 +1475,35 @@
   resolved "https://registry.npmjs.org/@vue/test-utils/-/test-utils-2.0.0-rc.18.tgz#ff22b252424fe72e5462cbb3a8e7405cef11ffb6"
   integrity sha512-aifolXjVdsogjaLmDoZ0FU8vN+R67aWmg9OuVeED4w5Ij5GFQLrlhM19uhWe/r5xXUL4fXMk3pX5wW6FJP1NcQ==
 
+"@vueuse/core@7.6.2":
+  version "7.6.2"
+  resolved "https://registry.npmjs.org/@vueuse/core/-/core-7.6.2.tgz#1b9aa92048991189fac31577ff439296efa5fb4a"
+  integrity sha512-bjAbXJVJO6aElMaZtDz2B70C0L6jFk/jGVqJxWZS5huffxA6dW5DN6tQQJwzOnx9B9rDhePHJIFKsix0qZIH2Q==
+  dependencies:
+    "@vueuse/shared" "7.6.2"
+    vue-demi "*"
+
 "@vueuse/head@^0.7.5":
   version "0.7.5"
   resolved "https://registry.npmjs.org/@vueuse/head/-/head-0.7.5.tgz#0284e3dc53ea6709196956bf25115eea863a847a"
   integrity sha512-L+XQ5Act0nT/ZyO8Qo10J4FyM1qPOyQb6MT4MMn6+AITzrStpmKs/nUDDLJKD/rCcNWl/65XbdQm4T2vKp3VOQ==
+
+"@vueuse/nuxt@^7.6.2":
+  version "7.6.2"
+  resolved "https://registry.npmjs.org/@vueuse/nuxt/-/nuxt-7.6.2.tgz#1f2d97c2c88a0ce9875e0f6735ca6269aacce3ee"
+  integrity sha512-lmzpqEqauAwsBaDu95Q93ZmeqpO2OL/TdzCjUH2GK1Ke5u7MmeQrev6Q1NmXJGa0/ToRQVNv7W/xNGnnCpd3Ow==
+  dependencies:
+    "@nuxt/kit" "npm:@nuxt/kit-edge@latest"
+    "@vueuse/core" "7.6.2"
+    local-pkg "^0.4.1"
+    vue-demi "*"
+
+"@vueuse/shared@7.6.2":
+  version "7.6.2"
+  resolved "https://registry.npmjs.org/@vueuse/shared/-/shared-7.6.2.tgz#6d83bdb003cd8a56dc779fe501e73a4cb755b802"
+  integrity sha512-ThDld4Mx501tahRuHV6qJGkwCr17GknZrOzlD02Na9qJcH7Pq0quNTLx5cNDou7b1CKNvE3BXi2w/hz9KuPNTQ==
+  dependencies:
+    vue-demi "*"
 
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
@@ -8428,6 +8463,11 @@ vue-bundle-renderer@^0.3.5:
   integrity sha512-LmiGFvlK3ZVtUklpJKVmVkJcmpkLEHKE9YbSR6WgFULIikw3pusXhX3vZPkL9tGcjzBERVrB9CQYDGdWApnEJQ==
   dependencies:
     bundle-runner "^0.0.1"
+
+vue-demi@*:
+  version "0.12.1"
+  resolved "https://registry.npmjs.org/vue-demi/-/vue-demi-0.12.1.tgz#f7e18efbecffd11ab069d1472d7a06e319b4174c"
+  integrity sha512-QL3ny+wX8c6Xm1/EZylbgzdoDolye+VpCXRhI2hug9dJTP3OUJ3lmiKN3CsVV3mOJKwFi0nsstbgob0vG7aoIw==
 
 vue-eslint-parser@^8.0.1, vue-eslint-parser@^8.2.0:
   version "8.2.0"

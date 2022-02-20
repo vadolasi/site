@@ -4,9 +4,13 @@ import IconsResolver from "unplugin-icons/resolver"
 
 export default defineNuxtConfig({
   srcDir: "src",
-  buildModules: ["nuxt-windicss", "unplugin-icons/nuxt"],
+  buildModules: ["nuxt-windicss", "unplugin-icons/nuxt", "@nuxtjs/color-mode", "@vueuse/nuxt"],
 
   components: true,
+
+  colorMode: {
+    classSuffix: ""
+  },
 
   vite: {
     plugins: [

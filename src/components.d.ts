@@ -2,11 +2,15 @@
 // We suggest you to commit this file into source control
 // Read more: https://github.com/vuejs/vue-next/pull/3399
 
-declare module "vue" {
+declare module 'vue' {
   export interface GlobalComponents {
-    "IconMdi:email": typeof import("~icons/mdi/email")["default"]
-    "IconMdi:github": typeof import("~icons/mdi/github")["default"]
-    "IconMdi:linkedin": typeof import("~icons/mdi/linkedin")["default"]
+    'IconIon:moon': typeof import('~icons/ion/moon')['default']
+    'IconIon:sunny': typeof import('~icons/ion/sunny')['default']
+    'IconMdi:email': typeof import('~icons/mdi/email')['default']
+    'IconMdi:github': typeof import('~icons/mdi/github')['default']
+    'IconMdi:linkedin': typeof import('~icons/mdi/linkedin')['default']
+    'IconMdi:moon': typeof import('~icons/mdi/moon')['default']
+    'IconMdi:sun': typeof import('~icons/mdi/sun')['default']
   }
 }
 

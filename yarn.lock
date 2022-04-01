@@ -1475,12 +1475,13 @@
   resolved "https://registry.npmjs.org/@vue/test-utils/-/test-utils-2.0.0-rc.18.tgz#ff22b252424fe72e5462cbb3a8e7405cef11ffb6"
   integrity sha512-aifolXjVdsogjaLmDoZ0FU8vN+R67aWmg9OuVeED4w5Ij5GFQLrlhM19uhWe/r5xXUL4fXMk3pX5wW6FJP1NcQ==
 
-"@vueuse/core@7.6.2":
-  version "7.6.2"
-  resolved "https://registry.npmjs.org/@vueuse/core/-/core-7.6.2.tgz#1b9aa92048991189fac31577ff439296efa5fb4a"
-  integrity sha512-bjAbXJVJO6aElMaZtDz2B70C0L6jFk/jGVqJxWZS5huffxA6dW5DN6tQQJwzOnx9B9rDhePHJIFKsix0qZIH2Q==
+"@vueuse/core@8.2.3":
+  version "8.2.3"
+  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-8.2.3.tgz#cc87e3b14867619fd475868a97ffd0366b0a9b77"
+  integrity sha512-bz6XroFRFOIGzhAHcnTfjtAQNkNcSELKPoSSUGROwYfOgTnaVyq7iKhgwdeRNom3y9q+a60RlhD35oJaGsXDHA==
   dependencies:
-    "@vueuse/shared" "7.6.2"
+    "@vueuse/metadata" "8.2.3"
+    "@vueuse/shared" "8.2.3"
     vue-demi "*"
 
 "@vueuse/head@^0.7.5":
@@ -1488,20 +1489,26 @@
   resolved "https://registry.npmjs.org/@vueuse/head/-/head-0.7.5.tgz#0284e3dc53ea6709196956bf25115eea863a847a"
   integrity sha512-L+XQ5Act0nT/ZyO8Qo10J4FyM1qPOyQb6MT4MMn6+AITzrStpmKs/nUDDLJKD/rCcNWl/65XbdQm4T2vKp3VOQ==
 
-"@vueuse/nuxt@^7.6.2":
-  version "7.6.2"
-  resolved "https://registry.npmjs.org/@vueuse/nuxt/-/nuxt-7.6.2.tgz#1f2d97c2c88a0ce9875e0f6735ca6269aacce3ee"
-  integrity sha512-lmzpqEqauAwsBaDu95Q93ZmeqpO2OL/TdzCjUH2GK1Ke5u7MmeQrev6Q1NmXJGa0/ToRQVNv7W/xNGnnCpd3Ow==
+"@vueuse/metadata@8.2.3":
+  version "8.2.3"
+  resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-8.2.3.tgz#2b0afe38a37cf3d5277c624502ebc5f86eec6d90"
+  integrity sha512-xH5256Bn6hBYvQWoaCBagpeCrzJmeEeWnyDDkwVFhx7+pLOe4I6gsMHie3yJoowK9AN/D7JLTtEBbWvvBi5TOA==
+
+"@vueuse/nuxt@^8.2.3":
+  version "8.2.3"
+  resolved "https://registry.yarnpkg.com/@vueuse/nuxt/-/nuxt-8.2.3.tgz#a116da5cb4c994a3ad5579cb7168ee764e1891fd"
+  integrity sha512-d1voNHQHMjkI4n0WCiTp6AL8eQ9/VsjS6Mx6FLLa7FqhTIVkct6DoSf+qjfbupi6lF3XHf62Kl0l/LcjY8O+lA==
   dependencies:
     "@nuxt/kit" "npm:@nuxt/kit-edge@latest"
-    "@vueuse/core" "7.6.2"
+    "@vueuse/core" "8.2.3"
+    "@vueuse/metadata" "8.2.3"
     local-pkg "^0.4.1"
     vue-demi "*"
 
-"@vueuse/shared@7.6.2":
-  version "7.6.2"
-  resolved "https://registry.npmjs.org/@vueuse/shared/-/shared-7.6.2.tgz#6d83bdb003cd8a56dc779fe501e73a4cb755b802"
-  integrity sha512-ThDld4Mx501tahRuHV6qJGkwCr17GknZrOzlD02Na9qJcH7Pq0quNTLx5cNDou7b1CKNvE3BXi2w/hz9KuPNTQ==
+"@vueuse/shared@8.2.3":
+  version "8.2.3"
+  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-8.2.3.tgz#c8281ceb0e2e73bac329a0af506d0c883353be34"
+  integrity sha512-4Cd3s+x8ZwzzAf7o8jS7mEj9pQ1Zsf9aiNBAFg4rHcWeDY0S3XMgvN4ae2hBul7jmi+Ab4REAqiqYWyYqU86qg==
   dependencies:
     vue-demi "*"
 

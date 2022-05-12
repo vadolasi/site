@@ -50,7 +50,7 @@
     "unplugin-icons": "^0.13.2",
     "unplugin-vue-components": "^0.17.18",
     "vitest": "^0.3.4",
-    "vue-eslint-parser": "^8.2.0"
+    "vue-eslint-parser": "^9.0.1"
   },
   "config": {
     "commitizen": {

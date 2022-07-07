@@ -24,7 +24,7 @@
     "@typescript-eslint/parser": "^5.11.0",
     "@vitejs/plugin-vue": "^2.2.0",
     "@vue/test-utils": "^2.0.0-rc.18",
-    "@vueuse/nuxt": "^7.6.2",
+    "@vueuse/nuxt": "^8.9.0",
     "c8": "^7.11.0",
     "commitizen": "^4.2.4",
     "cypress": "^9.4.1",

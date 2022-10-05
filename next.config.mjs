@@ -11,7 +11,8 @@ const nextConfig = withPreact({
     config.plugins.push(UnpluginIcons({ compiler: "jsx", jsx: "preact" }))
 
     return config
-  }
+  },
+  eslint: { ignoreDuringBuilds: true }
 })
 
 export default nextConfig

@@ -1,4 +1,7 @@
 import { defineConfig } from "windicss/helpers"
+// @ts-ignore
+import flowbite from "flowbite-windicss-plugin"
+import typography from "windicss/plugin/typography"
 
 export default defineConfig({
   darkMode: "class",
@@ -14,39 +17,43 @@ export default defineConfig({
     },
     fontFamily: {
       "body": [
-    "Inter", 
-    "ui-sans-serif", 
-    "system-ui", 
-    "-apple-system", 
-    "system-ui", 
-    "Segoe UI", 
-    "Roboto", 
-    "Helvetica Neue", 
-    "Arial", 
-    "Noto Sans", 
-    "sans-serif", 
-    "Apple Color Emoji", 
-    "Segoe UI Emoji", 
-    "Segoe UI Symbol", 
+    "Inter",
+    "ui-sans-serif",
+    "system-ui",
+    "-apple-system",
+    "system-ui",
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    "Arial",
+    "Noto Sans",
+    "sans-serif",
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
     "Noto Color Emoji"
   ],
       "sans": [
-    "Inter", 
-    "ui-sans-serif", 
-    "system-ui", 
-    "-apple-system", 
-    "system-ui", 
-    "Segoe UI", 
-    "Roboto", 
-    "Helvetica Neue", 
-    "Arial", 
-    "Noto Sans", 
-    "sans-serif", 
-    "Apple Color Emoji", 
-    "Segoe UI Emoji", 
-    "Segoe UI Symbol", 
+    "Inter",
+    "ui-sans-serif",
+    "system-ui",
+    "-apple-system",
+    "system-ui",
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    "Arial",
+    "Noto Sans",
+    "sans-serif",
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
     "Noto Color Emoji"
   ]
     }
-  }
+  },
+  "plugins": [
+    typography({ dark: true }),
+    flowbite
+  ]
 })

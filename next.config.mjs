@@ -3,7 +3,7 @@ import withPreact from "next-plugin-preact"
 import WindiCSS from "windicss-webpack-plugin"
 import UnpluginIcons from "unplugin-icons/webpack"
 
-const nextConfig = withPreact({
+export default withPreact({
   reactStrictMode: true,
   swcMinify: true,
   webpack: config => {
@@ -12,7 +12,9 @@ const nextConfig = withPreact({
 
     return config
   },
-  eslint: { ignoreDuringBuilds: true }
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true },
+  images: {
+    domains: ["flowbite.s3.amazonaws.com", "flowbite.com"]
+  }
 })
-
-export default nextConfig

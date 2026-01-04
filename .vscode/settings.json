@@ -1,5 +1,15 @@
 {
-	"files.associations": {
-		"*.css": "tailwindcss"
-	}
+  "files.associations": {
+    "*.css": "tailwindcss",
+    "*.svx": "markdown"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": "explicit",
+    "source.organizeImports.biome": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "biomejs.biome",
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
 }

@@ -1,17 +1,11 @@
+import withToc from "@stefanprobst/rehype-extract-toc"
+import withTocExport from "@stefanprobst/rehype-extract-toc/mdsvex"
 import adapter from "@sveltejs/adapter-cloudflare"
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte"
 import { mdsvex } from "mdsvex"
-import { visit } from "unist-util-visit"
-
-const shiftHeaders = () => (tree) => {
-  visit(tree, "element", (node) => {
-    const match = node.tagName.match(/^h([1-6])$/)
-    if (match) {
-      const level = parseInt(match[1], 10)
-      node.tagName = `h${Math.min(level + 1, 6)}`
-    }
-  })
-}
+import rehypeAutolinkHeadings from "rehype-autolink-headings"
+import rehypeShiftHeading from "rehype-shift-heading"
+import rehypeSlug from "rehype-slug"
 
 /** @type {import("@sveltejs/kit").Config} */
 const config = {
@@ -21,14 +15,37 @@ const config = {
     vitePreprocess(),
     mdsvex({
       extensions: [".svx", ".md"],
-      rehypePlugins: [shiftHeaders]
+      rehypePlugins: [
+        [rehypeShiftHeading, { shift: 1 }],
+        rehypeSlug,
+        withToc,
+        [withTocExport, { name: "toc" }],
+        [
+          rehypeAutolinkHeadings,
+          {
+            behavior: "prepend",
+            properties: {
+              className: ["anchor-link"],
+              ariaHidden: true,
+              tabIndex: -1
+            },
+            content: {
+              type: "text",
+              value: "#"
+            }
+          }
+        ]
+      ]
     })
   ],
   kit: {
     // adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
     // If your environment is not supported, or you settled on a specific environment, switch out the adapter.
     // See https://svelte.dev/docs/kit/adapters for more information about adapters.
-    adapter: adapter()
+    adapter: adapter(),
+    alias: {
+      $content: "src/content"
+    }
   },
   extensions: [".svelte", ".svx", ".md"]
 }

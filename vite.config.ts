@@ -4,5 +4,12 @@ import tailwindcss from "@tailwindcss/vite"
 import { defineConfig } from "vite"
 
 export default defineConfig({
-  plugins: [tailwindcss(), enhancedImages(), sveltekit()]
+  plugins: [tailwindcss(), enhancedImages(), sveltekit()],
+  ssr: {
+    noExternal: ["svelte-motion"]
+  },
+  server: {
+    host: true,
+    allowedHosts: true
+  }
 })

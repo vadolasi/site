@@ -1,13 +1,21 @@
 import { Feed } from "feed"
 import type { Component } from "svelte"
 import { render } from "svelte/server"
+import type { BlogPostMetadata } from "$content/types"
 import { getFileDates } from "$lib/server/utils"
 
 export const prerender = true
 
 export async function GET() {
   const posts = import.meta.glob("/src/content/posts/*.md", { eager: true })
-  const siteUrl = "https://vitordaniel.com"
+  const images = import.meta.glob(
+    "/src/lib/assets/posts/*.{png,jpg,jpeg,webp}",
+    {
+      eager: true,
+      import: "default"
+    }
+  )
+  const siteUrl = "https://vitordaniel.is-a.dev"
 
   const sortedPosts = (
     await Promise.all(
@@ -21,14 +29,12 @@ export async function GET() {
   ).sort((a, b) => b.dates.updated.getTime() - a.dates.updated.getTime())
 
   const feed = new Feed({
-    title: "Vitor Daniel's Blog",
-    description: "Personal blog of Vitor Daniel",
+    title: "Blog de Vitor Daniel",
+    description: "Artigos sobre desenvolvimento web e tecnologia",
     id: siteUrl,
     link: siteUrl,
     language: "pt-BR",
-    image: `${siteUrl}/favicon.png`,
-    favicon: `${siteUrl}/favicon.ico`,
-    copyright: `All rights reserved ${new Date().getFullYear()}, Vitor Daniel`,
+    copyright: `${new Date().getFullYear()} Vitor Daniel. Todos os direitos reservados.`,
     updated: sortedPosts[0]?.dates.updated ?? new Date(),
     generator: "SvelteKit",
     feedLinks: {
@@ -43,8 +49,8 @@ export async function GET() {
   for (const post of sortedPosts) {
     feed.addItem({
       title: post.title,
-      id: `${siteUrl}/blog/posts/${post.slug}`,
-      link: `${siteUrl}/blog/posts/${post.slug}`,
+      id: `${siteUrl}/blog/${post.slug}`,
+      link: `${siteUrl}/blog/${post.slug}`,
       description: post.description,
       author: [
         {
@@ -58,9 +64,7 @@ export async function GET() {
       content: render(post.content).body,
       date: post.dates.updated,
       published: post.dates.created,
-      image: post.cover.startsWith("$lib")
-        ? `${siteUrl}${post.cover.replace("$lib", "/src/lib")}`
-        : post.cover
+      image: post.cover ? `${siteUrl}${images[post.cover]}` : undefined
     })
   }
 

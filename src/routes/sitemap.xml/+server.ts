@@ -12,6 +12,7 @@ export async function GET() {
   })
 
   doc.ele("url").ele("loc").txt(siteUrl).up().up()
+  doc.ele("url").ele("loc").txt(`${siteUrl}/about`).up().up()
   doc.ele("url").ele("loc").txt(`${siteUrl}/blog`).up().up()
 
   for (const path in posts) {

@@ -1,15 +1,18 @@
 <script lang="ts">
+  import { ArrowLeft } from "@lucide/svelte";
   import type { TechArticle, WithContext } from "schema-dts";
+  import { goto } from "$app/navigation";
   import { page } from "$app/state";
+  import WrittenBy from "$lib/components/WrittenBy.svelte";
+  import TableOfContents from "./TableOfContents.svelte";
 
   const { data } = $props();
   const {
     Content,
-    meta: { title, description, keywords },
+    meta: { title, description, keywords, toc },
     coverImage,
     seriesPosts,
     dates,
-    // svelte-ignore state_referenced_locally
   } = $derived(data);
 
   const coverSrc = $derived(
@@ -64,86 +67,114 @@
 
 {@html `<script type="application/ld+json">${jsonLdString}</script>`}
 
-<div class="relative w-full h-120 lg:h-160">
+<div class="mb-16">
+  <div class="mb-8">
+    <a
+      href="/blog"
+      class="btn btn-sm btn-ghost gap-2 pl-0 hover:bg-transparent hover:underline text-base-content/80 hover:text-base-content"
+    >
+      <ArrowLeft size={20} />
+      Ir para o blog
+    </a>
+  </div>
+
+  <h1
+    class="text-xl lg:text-5xl font-bold mb-6 text-base-content leading-tight"
+  >
+    {title}
+  </h1>
+
+  <p class="text-lg text-base-content/80 leading-relaxed mb-8">
+    {description}
+  </p>
+
+  <div
+    class="flex flex-wrap items-center gap-4 text-sm font-medium text-base-content/60 mb-12"
+  >
+    <time datetime={new Date(dates.created).toISOString()}>
+      {new Intl.DateTimeFormat("pt-BR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }).format(new Date(dates.created))}
+    </time>
+    {#if keywords && keywords.length > 0}
+      <span class="hidden sm:inline">•</span>
+      <div class="flex gap-2">
+        {#each keywords as keyword}
+          <span class="badge badge-outline">{keyword}</span>
+        {/each}
+      </div>
+    {/if}
+  </div>
+
   {#if coverImage}
-    <div class="absolute inset-0">
+    <figure
+      class="w-full aspect-video overflow-hidden rounded-2xl shadow-lg bg-base-200"
+    >
       <enhanced:img
         src={coverImage}
-        alt=""
+        alt={title}
         class="w-full h-full object-cover"
       />
-      <div
-        class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent lg:via-base-100/20"
-      ></div>
-    </div>
+    </figure>
   {/if}
-
-  <div class="absolute bottom-0 left-0 w-full p-4 lg:p-12">
-    <div class="container mx-auto">
-      <div class="max-w-4xl mx-auto text-center">
-        <p
-          class="font-bold uppercase tracking-wider mb-4 text-sm text-base-content/80"
-        >
-          <time datetime={new Date(dates.created).toISOString()}>
-            {new Intl.DateTimeFormat("pt-BR", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            }).format(new Date(dates.created))}
-          </time>
-        </p>
-        <h1
-          class="text-4xl lg:text-6xl font-bold mb-4 text-base-content leading-tight"
-        >
-          {title}
-        </h1>
-        <p class="text-xl lg:text-2xl text-base-content/80 max-w-3xl mx-auto">
-          {description}
-        </p>
-      </div>
-    </div>
-  </div>
 </div>
 
-<div class="container mx-auto px-4 py-12 max-w-4xl">
-  <main>
-    <article class="prose lg:prose-xl max-w-none">
-      {#if seriesPosts && seriesPosts.length > 0}
-        <nav
-          class="not-prose bg-base-200 p-6 rounded-xl mb-8 border border-base-300 text-base"
-          aria-label="Nesta série"
+{#if seriesPosts && seriesPosts.length > 0}
+  <nav
+    class="bg-base-200 p-6 rounded-xl mb-12 border border-base-300"
+    aria-label="Nesta série"
+  >
+    <h2 class="font-bold text-sm uppercase tracking-wider mb-4 opacity-70">
+      Nesta série
+    </h2>
+    <ul class="steps steps-vertical w-full">
+      {#each seriesPosts as post}
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+        <li
+          class="step {post.slug === page.params.slug
+            ? 'step-primary'
+            : ''} text-left cursor-pointer"
+          onclick={(e) => {
+            if (e.target instanceof Element && e.target.closest("a")) return;
+            goto(`/blog/${post.slug}`);
+          }}
         >
-          <h2 class="font-bold text-lg mb-4 uppercase tracking-wide">
-            Nesta série
-          </h2>
-          <ul class="steps steps-vertical w-full">
-            {#each seriesPosts as post}
-              <li
-                class="step {post.slug === page.params.slug
-                  ? 'step-primary'
-                  : ''} text-left"
-              >
-                <a
-                  href="/blog/{post.slug}"
-                  class="text-left hover:text-primary transition-colors {post.slug ===
-                  page.params.slug
-                    ? 'font-bold'
-                    : ''}"
-                  aria-current={post.slug === page.params.slug
-                    ? "page"
-                    : undefined}
-                >
-                  {post.title}
-                </a>
-              </li>
-            {/each}
-          </ul>
-        </nav>
-      {/if}
+          <a
+            href="/blog/{post.slug}"
+            class="text-left hover:text-primary transition-colors {post.slug ===
+            page.params.slug
+              ? 'font-bold'
+              : ''}"
+            aria-current={post.slug === page.params.slug ? "page" : undefined}
+          >
+            {post.title}
+          </a>
+        </li>
+      {/each}
+    </ul>
+  </nav>
+{/if}
+
+<div class="relative">
+  <main class="min-w-0 w-full">
+    <article
+      class="prose prose-lg max-w-none prose-headings:scroll-mt-24"
+      id="scrollspy-content"
+    >
       <Content />
-      <div class="mt-8 pt-4 border-t border-base-300">
-        <p class="text-base-content font-semibold">Escrito por Vitor Daniel</p>
+
+      <div class="mt-16 not-prose">
+        <WrittenBy />
       </div>
     </article>
   </main>
+
+  <aside class="hidden xl:block absolute left-full top-0 ml-16 w-64 h-full">
+    <div class="sticky top-24">
+      <TableOfContents {toc} />
+    </div>
+  </aside>
 </div>

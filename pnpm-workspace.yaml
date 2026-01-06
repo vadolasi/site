@@ -3,3 +3,4 @@ onlyBuiltDependencies:
   - lefthook
   - nodegit
   - sharp
+  - "@stefanprobst/rehype-extract-toc"

@@ -1,7 +1,28 @@
 @import "tailwindcss";
+@import "@catppuccin/tailwindcss/mocha.css";
 @plugin "@tailwindcss/typography";
 @plugin "daisyui" {
 	themes: false;
 }
 
 @plugin "./catppuccinTheme.mocha.ts";
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+	@apply relative;
+}
+
+.anchor-link {
+	@apply absolute -left-8 no-underline text-gray-500 opacity-0 transition-opacity;
+}
+
+h2:hover .anchor-link,
+h3:hover .anchor-link,
+h4:hover .anchor-link,
+h5:hover .anchor-link,
+h6:hover .anchor-link {
+	@apply opacity-100;
+}

@@ -1,5 +1,3 @@
-// See https://svelte.dev/docs/kit/types#app.d.ts
-// for information about these interfaces
 declare global {
   namespace App {
     interface Platform {
@@ -10,4 +8,18 @@ declare global {
   }
 }
 
-export {}
+declare module "$content/*.md" {
+  import type { SvelteComponent } from "svelte"
+
+  export default class Comp extends SvelteComponent {}
+}
+
+declare module "$content/posts/*.md" {
+  import type { SvelteComponent } from "svelte"
+  import type { BlogPostMetadata } from "./content/types"
+  import type { Toc } from "@stefanprobst/rehype-extract-toc"
+
+  export default class Comp extends SvelteComponent {}
+
+  export const metadata: BlogPostMetadata & { toc: Toc }
+}

@@ -1,9 +1,5 @@
 declare global {
   namespace App {
-    interface Locals {
-      navigationId: string
-    }
-
     interface Platform {
       env: Env
       cf: CfProperties

@@ -23,7 +23,6 @@
     "@catppuccin/tailwindcss": "^1.0.0",
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",
-    "@fingerprintjs/fingerprintjs": "^5.0.1",
     "@icons-pack/svelte-simple-icons": "^6.5.0",
     "@lucide/svelte": "^0.562.0",
     "@stefanprobst/rehype-extract-toc": "github:vadolasi/rehype-extract-toc",
@@ -62,7 +61,6 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
-    "accept-language": "^3.0.20",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.4.0"
   },

@@ -29,7 +29,6 @@ export const load: PageServerLoad = async () => {
       return {
         ...p.metadata,
         slug,
-        featured: p.metadata.featured === true,
         coverImage
       }
     })

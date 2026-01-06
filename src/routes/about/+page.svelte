@@ -16,7 +16,9 @@
   let { data } = $props();
   let { projects } = $derived(data);
 
-  let featuredProjects = $derived(projects.filter((p) => p.featured));
+  let featuredProjects = $derived(
+    projects.filter((p) => p.featured).sort((a, b) => b.featured - a.featured),
+  );
   let otherProjects = $derived(projects.filter((p) => !p.featured));
 </script>
 

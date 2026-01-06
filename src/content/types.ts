@@ -17,7 +17,7 @@ export interface ProjectMetadataBase {
   link?: string
   repo?: string
   technologies: string[]
-  featured?: boolean
+  featured?: number
   about?: string
   [key: string]: unknown
 }

@@ -4,8 +4,8 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
   import WrittenBy from "$lib/components/WrittenBy.svelte";
-  import TableOfContents from "./TableOfContents.svelte";
   import { getRelativeTime } from "$lib/utils";
+  import TableOfContents from "./TableOfContents.svelte";
 
   const { data } = $props();
   const {

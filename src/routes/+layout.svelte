@@ -16,7 +16,7 @@
 </svelte:head>
 
 <div
-  class="container mx-auto px-6 md:px-0 py-12 max-w-prose font-sans antialiased mb-24"
+  class="container mx-auto px-6 md:px-0 py-12 max-w-prose font-sans antialiased mb-24 min-h-screen"
 >
   {@render children()}
 

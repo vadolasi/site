@@ -1,9 +1,9 @@
 <script lang="ts">
   import { SiWhatsapp } from "@icons-pack/svelte-simple-icons";
   import { Github, Instagram, Linkedin, Mail } from "@lucide/svelte";
+  import type { Person, WithContext } from "schema-dts";
   import Bio from "$content/about/bio.md";
   import BlurFade from "$lib/components/BlurFade.svelte";
-  import type { Person, WithContext } from "schema-dts";
 
   let { data } = $props();
   let { latestPosts } = $derived(data);
@@ -95,10 +95,10 @@
       class="relative size-40 overflow-hidden rounded-4xl border border-base-300 shadow-sm"
     >
       <enhanced:img
-        src="$lib/assets/photo.webp?enhanced=true&w=160"
+        src="$lib/assets/photo.webp?enhanced=true&w=360"
         alt="Vitor Daniel"
         class="h-full w-full object-cover bg-primary"
-        sizes="160px"
+        sizes="360px"
       />
     </div>
   </header>

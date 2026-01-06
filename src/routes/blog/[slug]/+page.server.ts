@@ -38,6 +38,8 @@ export const load: PageServerLoad = async ({ params }) => {
         }
       }
 
+      console.log(p.metadata)
+
       return {
         slug,
         ...p.metadata,

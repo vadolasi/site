@@ -1,5 +1,9 @@
 declare global {
   namespace App {
+    interface Locals {
+      navigationId: string
+    }
+
     interface Platform {
       env: Env
       cf: CfProperties
@@ -21,5 +25,8 @@ declare module "$content/posts/*.md" {
 
   export default class Comp extends SvelteComponent {}
 
-  export const metadata: BlogPostMetadata & { toc: Toc }
+  export const metadata: BlogPostMetadata & {
+    toc: Toc
+    readingTime: { text: string; minutes: number; time: number; words: number }
+  }
 }

@@ -34,7 +34,7 @@ export async function GET() {
     id: siteUrl,
     link: siteUrl,
     language: "pt-BR",
-    copyright: `${new Date().getFullYear()} Vitor Daniel. Todos os direitos reservados.`,
+    copyright: `© ${new Date().getFullYear()} Vitor Daniel. Todos os direitos reservados.`,
     updated: sortedPosts[0]?.dates.updated ?? new Date(),
     generator: "SvelteKit",
     feedLinks: {
@@ -62,6 +62,7 @@ export async function GET() {
         }
       ],
       content: render(post.content).body,
+      copyright: `© ${new Date().getFullYear()} Vitor Daniel`,
       date: post.dates.updated,
       published: post.dates.created,
       image: post.cover ? `${siteUrl}${images[post.cover]}` : undefined

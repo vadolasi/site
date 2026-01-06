@@ -5,6 +5,7 @@
   import { page } from "$app/state";
   import WrittenBy from "$lib/components/WrittenBy.svelte";
   import TableOfContents from "./TableOfContents.svelte";
+  import { getRelativeTime } from "$lib/utils";
 
   const { data } = $props();
   const {
@@ -42,6 +43,21 @@
   const jsonLdString = $derived(
     JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
   );
+
+  let elapsed = $state(0);
+  const startTime = Date.now();
+
+  setInterval(() => {
+    elapsed += 1;
+  }, 1000);
+
+  $effect(() => {
+    const interval = setInterval(() => {
+      elapsed = Date.now() - startTime;
+    }, 1000);
+
+    return () => clearInterval(interval);
+  });
 </script>
 
 <svelte:head>
@@ -98,6 +114,11 @@
         year: "numeric",
       }).format(new Date(dates.created))}
     </time>
+    <span class="-ml-2">
+      {#key elapsed}
+        ({getRelativeTime(new Date(dates.created))})
+      {/key}
+    </span>
     {#if keywords && keywords.length > 0}
       <span class="hidden sm:inline">•</span>
       <div class="flex gap-2">

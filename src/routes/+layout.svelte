@@ -1,8 +1,58 @@
 <script lang="ts">
   import "./layout.css";
+  import { load as fingerprintLoad } from "@fingerprintjs/fingerprintjs";
+  import { onMount } from "svelte";
+  import { onNavigate } from "$app/navigation";
   import favicon from "$lib/assets/favicon.svg";
 
-  const { children } = $props();
+  const { children, data } = $props();
+
+  let visitorId: string | null = null;
+
+  onMount(() => {
+    fingerprintLoad()
+      .then((fp) => fp.get())
+      .then((result) => {
+        visitorId = result.visitorId;
+        fetch("/api/data", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            event: "identity",
+            visitorId,
+            navigationId: data.navigationId,
+            hostname: window.location.hostname,
+            language: navigator.language,
+            referrer: document.referrer,
+            screen: `${window.screen.width}x${window.screen.height}`,
+            title: document.title,
+            url: window.location.pathname,
+          }),
+        });
+      });
+  });
+
+  onNavigate(() => {
+    fetch("/api/data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        event: "pageview",
+        visitorId: visitorId ?? undefined,
+        navigationId: data.navigationId,
+        hostname: window.location.hostname,
+        language: navigator.language,
+        referrer: document.referrer,
+        screen: `${window.screen.width}x${window.screen.height}`,
+        title: document.title,
+        url: window.location.pathname,
+      }),
+    });
+  });
 </script>
 
 <svelte:head>

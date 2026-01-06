@@ -6,6 +6,8 @@ import { mdsvex } from "mdsvex"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
 import rehypeShiftHeading from "rehype-shift-heading"
 import rehypeSlug from "rehype-slug"
+import remarkReadingTime from "remark-reading-time"
+import readingMdsvexTime from "remark-reading-time/mdsvex.js"
 
 /** @type {import("@sveltejs/kit").Config} */
 const config = {
@@ -35,7 +37,8 @@ const config = {
             }
           }
         ]
-      ]
+      ],
+      remarkPlugins: [remarkReadingTime, readingMdsvexTime]
     })
   ],
   kit: {

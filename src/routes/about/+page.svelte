@@ -40,8 +40,8 @@
     class="flex flex-col md:flex-row gap-8 md:gap-12 items-center md:items-start"
   >
     <enhanced:img
-      src="$lib/assets/photo2.webp?enhanced&w=256&aspect=1:1"
-      sizes="256px"
+      src="$lib/assets/photo2.webp?enhanced&w=512&aspect=1:1"
+      sizes="512px"
       alt="Vitor Daniel"
       class="relative w-64 h-64 object-cover rounded-full z-10 bg-primary"
     />

@@ -1,6 +1,7 @@
 onlyBuiltDependencies:
+  - '@stefanprobst/rehype-extract-toc'
   - esbuild
   - lefthook
   - nodegit
   - sharp
-  - "@stefanprobst/rehype-extract-toc"
+  - workerd

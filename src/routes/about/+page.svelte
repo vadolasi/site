@@ -11,10 +11,9 @@
     Linkedin,
     Mail,
   } from "@lucide/svelte";
-  import About from "$content/about/about.md";
 
   let { data } = $props();
-  let { projects } = $derived(data);
+  let { projects, aboutHtml } = $derived(data);
 
   let featuredProjects = $derived(
     projects.filter((p) => p.featured).sort((a, b) => b.featured - a.featured),
@@ -106,7 +105,7 @@
 </div>
 
 <div class="prose min-w-full">
-  <About />
+  {@html aboutHtml}
 </div>
 
 <section class="mt-16">

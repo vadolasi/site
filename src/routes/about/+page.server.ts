@@ -1,40 +1,50 @@
+import { readFile } from "node:fs/promises"
+import { processMarkdown, extractMetadata } from "$lib/server/markdown"
 import type { PageServerLoad } from "./$types"
 
 export const prerender = true
 
-export const load: PageServerLoad = async () => {
-  const projectsModules = import.meta.glob("/src/content/projects/*.md", {
-    eager: true
-  })
-  const images = import.meta.glob("/src/lib/assets/*.{webp,png,jpg,jpeg}", {
-    eager: true,
-    query: { enhanced: true, w: "400;800;1200", aspect: "16:9" }
-  })
+export const load: PageServerLoad = async ({ setHeaders }) => {
+	setHeaders({
+		"cache-control": "public, max-age=0, s-maxage=3600, must-revalidate"
+	})
+	const aboutContent = await readFile("./src/content/about/about.md", "utf-8")
+	const { html: aboutHtml } = await processMarkdown(aboutContent, "none")
 
-  const projects = await Promise.all(
-    Object.entries(projectsModules).map(async ([path, mod]) => {
-      const slug = path.split("/").pop()?.replace(".md", "")
-      // biome-ignore lint/suspicious/noExplicitAny: metadata type is not strictly defined here
-      const p = mod as any
+	const projectsModules = import.meta.glob("/src/content/projects/*.md")
+	const images = import.meta.glob("/src/lib/assets/*.{webp,png,jpg,jpeg}", {
+		eager: true,
+		query: { enhanced: true, w: "400;800;1200", aspect: "16:9" }
+	})
 
-      let coverImage = null
-      if (p.metadata.cover) {
-        if (images[p.metadata.cover]) {
-          // biome-ignore lint/suspicious/noExplicitAny: image module type is dynamic
-          const imageModule = images[p.metadata.cover] as { default: any }
-          coverImage = imageModule.default
-        }
-      }
+	const projects = await Promise.all(
+		Object.keys(projectsModules).map(async (path) => {
+			const slug = path.split("/").pop()?.replace(".md", "")
+			const filePath = path.replace("/src", "./src")
+			const content = await readFile(filePath, "utf-8")
+			// Usa extractMetadata para apenas pegar metadados (mais rápido)
+			const metadata = extractMetadata(content, "project")
 
-      return {
-        ...p.metadata,
-        slug,
-        coverImage
-      }
-    })
-  )
+			let coverImage: Record<string, unknown> | null = null
+			if (metadata.cover) {
+				if (images[metadata.cover]) {
+					const imageModule = images[metadata.cover] as {
+						default: Record<string, unknown>
+					}
+					coverImage = imageModule.default
+				}
+			}
 
-  return {
-    projects
-  }
+			return {
+				...metadata,
+				slug,
+				coverImage
+			}
+		})
+	)
+
+	return {
+		projects,
+		aboutHtml
+	}
 }

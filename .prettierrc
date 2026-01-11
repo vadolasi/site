@@ -1,0 +1,32 @@
+{
+	"useTabs": true,
+	"quoteProps": "as-needed",
+	"semi": false,
+	"trailingComma": "none",
+	"singleQuote": false,
+	"plugins": ["prettier-plugin-svelte"],
+	"overrides": [
+		{
+			"files": "*.svelte",
+			"options": {
+				"parser": "svelte"
+			}
+		},
+		{
+			"files": ["*.json", "*.jsonc"],
+			"options": {
+				"parser": "json",
+				"useTabs": false,
+				"tabWidth": 2
+			}
+		},
+		{
+			"files": "*.js",
+			"options": {
+				"parser": "babel",
+				"useTabs": false,
+				"tabWidth": 2
+			}
+		}
+	]
+}

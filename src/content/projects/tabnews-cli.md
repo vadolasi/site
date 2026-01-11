@@ -1,5 +1,4 @@
 ---
 title: Tabnews CLI
-pitch: 
 description:
 ---

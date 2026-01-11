@@ -26,3 +26,158 @@ h5:hover .anchor-link,
 h6:hover .anchor-link {
 	@apply opacity-100;
 }
+
+.expressive-code .has-title .title {
+	@apply flex items-center justify-center gap-1;
+
+	> svg {
+		@apply size-4;
+	}
+}
+
+.expressive-code {
+	@apply relative;
+	transform: none;
+}
+
+.twoslash-popup-container {
+	display: none !important;
+	opacity: 0 !important;
+	visibility: hidden !important;
+	pointer-events: none !important;
+	background-color: rgb(30, 30, 46) !important;
+	background: rgb(30, 30, 46) !important;
+	padding: 12px !important;
+	border-radius: 8px !important;
+	border: 1px solid rgba(255, 255, 255, 0.15) !important;
+	box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7) !important;
+	max-width: 700px !important;
+	margin-top: 8px !important;
+	overflow: visible !important;
+	max-height: none !important;
+	height: auto !important;
+}
+
+.twoslash-popup-container[aria-hidden="false"] {
+	display: block !important;
+	opacity: 1 !important;
+	visibility: visible !important;
+	pointer-events: auto !important;
+}
+
+.twoslash-popup-code {
+	background-color: rgb(45, 48, 71) !important;
+	border: 1px solid rgba(255, 255, 255, 0.1) !important;
+	border-radius: 6px !important;
+	padding: 10px !important;
+	margin-bottom: 10px !important;
+}
+
+.twoslash-popup-code figure {
+	margin: 0 !important;
+}
+
+.twoslash-popup-code code {
+	background-color: transparent !important;
+	color: rgb(202, 211, 245) !important;
+	font-family: "Monaco", "Menlo", monospace !important;
+	font-size: 12px !important;
+}
+
+.twoslash-popup-docs {
+	color: rgba(255, 255, 255, 0.9) !important;
+	font-size: 13px !important;
+	line-height: 1.5 !important;
+	background-color: rgb(30, 30, 46) !important;
+}
+
+.twoslash-popup-docs p {
+	margin: 6px 0 !important;
+	color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.twoslash-popup-docs ul,
+.twoslash-popup-docs ol {
+	margin: 6px 0 6px 16px !important;
+	padding-left: 0 !important;
+	color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.twoslash-popup-docs li {
+	margin: 4px 0 !important;
+	color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.twoslash-popup-docs code {
+	background-color: rgba(0, 0, 0, 0.4) !important;
+	padding: 2px 6px !important;
+	border-radius: 3px !important;
+	color: rgb(202, 211, 245) !important;
+	font-family: "Monaco", "Menlo", monospace !important;
+	font-size: 12px !important;
+}
+
+.twoslash-popup-docs a {
+	color: rgb(148, 226, 213) !important;
+	text-decoration: none !important;
+}
+
+.twoslash-popup-docs a:hover {
+	text-decoration: underline !important;
+}
+
+.twoslash-popup-docs-tags {
+	border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+	padding-top: 8px !important;
+	margin-top: 8px !important;
+	color: rgba(255, 255, 255, 0.7) !important;
+	font-size: 12px !important;
+}
+
+.twoslash-popup-docs-tagline {
+	display: flex !important;
+	gap: 4px !important;
+	align-items: flex-start !important;
+}
+
+.twoslash-popup-docs-tag-name {
+	color: rgb(148, 226, 213) !important;
+	font-weight: 600 !important;
+	flex-shrink: 0 !important;
+}
+
+.twoslash-popup-docs-tag-value {
+	color: rgba(255, 255, 255, 0.7) !important;
+}
+/* Mermaid diagram styles */
+.mermaid-diagram {
+	@apply flex justify-center my-6;
+	overflow-x: auto;
+}
+
+.mermaid-diagram svg {
+	@apply max-w-full h-auto;
+	display: inline-block;
+	background-color: #181825;
+	color: #cdd6f4;
+}
+
+.mermaid-diagram .node rect,
+.mermaid-diagram .node polygon,
+.mermaid-diagram .node circle {
+	stroke: #8aadf4 !important;
+	fill: #1e2030 !important;
+}
+
+.mermaid-diagram .node text {
+	fill: #cdd6f4 !important;
+}
+
+.mermaid-diagram .edgePath path {
+	stroke: #8aadf4 !important;
+}
+
+.mermaid-diagram .edgeLabel {
+	background: #1e2030 !important;
+	color: #cdd6f4 !important;
+}

@@ -1,49 +1,63 @@
+import { readFile } from "node:fs/promises"
+import { extractMetadata } from "$lib/server/markdown"
 import { getFileDates } from "$lib/server/utils"
 import type { PageServerLoad } from "./$types"
 
 export const prerender = true
 
-export const load: PageServerLoad = async () => {
-  const posts = import.meta.glob("/src/content/posts/*.md", { eager: true })
-  const images = import.meta.glob(
-    "/src/lib/assets/posts/*.{webp,png,jpg,jpeg}",
-    {
-      eager: true,
-      query: { enhanced: true, w: "400;800", aspect: "16:9" }
-    }
-  )
+export const load: PageServerLoad = async ({ setHeaders }) => {
+	setHeaders({
+		"cache-control": "public, max-age=0, s-maxage=3600, must-revalidate"
+	})
+	const posts = import.meta.glob("/src/content/posts/**/post.md")
+	const images = import.meta.glob(
+		"/src/content/posts/**/cover.{webp,png,jpg,jpeg}",
+		{
+			eager: true,
+			query: { enhanced: true, w: "400;800", aspect: "16:9" }
+		}
+	)
 
-  const postsList = await Promise.all(
-    Object.entries(posts).map(async ([path, post]) => {
-      const p = post
-      const slug = path.split("/").pop()?.replace(".md", "")
-      const dates = await getFileDates(path)
+	const postsList = await Promise.all(
+		Object.keys(posts).map(async (path) => {
+			const parts = path.split("/")
+			const slug = parts[parts.length - 2]
+			const filePath = path.replace("/src", "./src")
+			const content = await readFile(filePath, "utf-8")
+			const metadata = extractMetadata(content, "blog")
+			const dates = await getFileDates(path)
 
-      let coverImage = null
-      if (p.metadata.cover) {
-        if (images[p.metadata.cover]) {
-          const imageModule = images[p.metadata.cover] as { default: any }
-          coverImage = imageModule.default
-        }
-      }
+			let coverImage: Record<string, unknown> | null = null
+			const coverKey = Object.keys(images).find((k) =>
+				k.includes(`/src/content/posts/${slug}/cover.`)
+			)
+			if (coverKey) {
+				const imageModule = images[coverKey] as {
+					default: Record<string, unknown>
+				}
+				coverImage = imageModule.default
+			}
 
-      return {
-        slug,
-        ...p.metadata,
-        dates,
-        coverImage
-      }
-    })
-  )
+			return {
+				slug,
+				...metadata,
+				dates,
+				coverImage
+			}
+		})
+	)
 
-  // Sort by date (newest first)
-  postsList.sort((a, b) => {
-    return (
-      new Date(b.dates.created).getTime() - new Date(a.dates.created).getTime()
-    )
-  })
+	// Filter out drafts and sort by date (newest first)
+	const publishedPosts = postsList
+		.filter((post) => !post.draft)
+		.sort((a, b) => {
+			return (
+				new Date(b.dates.created).getTime() -
+				new Date(a.dates.created).getTime()
+			)
+		})
 
-  return {
-    posts: postsList
-  }
+	return {
+		posts: publishedPosts
+	}
 }

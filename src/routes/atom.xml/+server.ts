@@ -9,6 +9,13 @@ export async function GET() {
 		query: "?raw",
 		import: "default"
 	})
+
+	// Fazer a glob dos covers uma vez
+	const coverAssets = import.meta.glob(
+		"/src/content/posts/**/cover.{webp,png,jpg,jpeg}",
+		{ eager: true, query: "?url", import: "default" }
+	) as Record<string, string>
+
 	const siteUrl = "https://vitordaniel.is-a.dev"
 
 	const sortedPosts = (
@@ -20,7 +27,21 @@ export async function GET() {
 				const dates = await getFileDates(path)
 				const metadata = extractMetadata(content, "blog")
 				const { html } = await processMarkdown(content, "blog")
-				return { slug, metadata, html, dates }
+
+				// Procurar pela URL do cover já resolvida pelo Vite com hash
+				let coverImage: string | null = null
+				const coverKey = Object.keys(coverAssets).find((k) =>
+					k.includes(`/src/content/posts/${slug}/cover.`)
+				)
+				if (coverKey) {
+					const imageUrl = coverAssets[coverKey]
+					if (typeof imageUrl === "string") {
+						const absoluteImageUrl = new URL(imageUrl, siteUrl).href
+						coverImage = absoluteImageUrl
+					}
+				}
+
+				return { slug, metadata, html, dates, coverImage }
 			})
 		)
 	)
@@ -46,7 +67,18 @@ export async function GET() {
 	})
 
 	for (const post of sortedPosts) {
-		feed.addItem({
+		const feedItem: {
+			title: string
+			id: string
+			link: string
+			description: string
+			author: Array<{ name: string; link: string; email: string }>
+			content: string
+			copyright: string
+			date: Date
+			published: Date
+			image?: string
+		} = {
 			title: post.metadata.title,
 			id: `${siteUrl}/blog/${post.slug}`,
 			link: `${siteUrl}/blog/${post.slug}`,
@@ -55,17 +87,20 @@ export async function GET() {
 				{
 					name: "Vitor Daniel",
 					link: siteUrl,
-					email: "vitor036daniel@gmail.com"
+					email: "vitor@vitordaniel.is-a.dev"
 				}
 			],
 			content: post.html,
 			copyright: `© ${new Date().getFullYear()} Vitor Daniel`,
 			date: post.dates.updated,
-			published: post.dates.created,
-			image: post.metadata.cover
-				? `${siteUrl}${post.metadata.cover}`
-				: undefined
-		})
+			published: post.dates.created
+		}
+
+		if (post.coverImage) {
+			feedItem.image = post.coverImage
+		}
+
+		feed.addItem(feedItem)
 	}
 
 	return new Response(feed.atom1(), {

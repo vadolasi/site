@@ -2,7 +2,6 @@
 	import type { Toc } from "@stefanprobst/rehype-extract-toc"
 
 	const { toc } = $props<{ toc: Toc }>()
-	console.log(toc)
 </script>
 
 {#if toc && toc.length > 0}

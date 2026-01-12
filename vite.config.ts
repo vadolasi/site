@@ -9,6 +9,9 @@ export default defineConfig({
 		noExternal: ["svelte-motion"]
 	},
 	assetsInclude: ["**/*.md"],
+	build: {
+		sourcemap: false
+	},
 	server: {
 		host: true,
 		allowedHosts: true

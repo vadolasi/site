@@ -1,26 +1,22 @@
 import { Feed } from "feed"
 import { getFileDates } from "$lib/server/utils"
 import { processMarkdown, extractMetadata } from "$lib/server/markdown"
-import { readdirSync, readFileSync, existsSync } from "fs"
-import { resolve } from "path"
 
 export const prerender = true
 
 export async function GET() {
-	const postsDir = resolve("src/content/posts")
-	const postDirs = readdirSync(postsDir, { withFileTypes: true }).filter((d) =>
-		d.isDirectory()
-	)
-	const siteUrl = "https://vitordaniel.com"
+	const postsModules = import.meta.glob("/src/content/posts/**/post.md", {
+		query: "?raw",
+		import: "default"
+	})
+	const siteUrl = "https://vitordaniel.is-a.dev"
 
 	const sortedPosts = (
 		await Promise.all(
-			postDirs.map(async (dir) => {
-				const slug = dir.name
-				const path = `/src/content/posts/${slug}/post.md`
-				const fullPath = resolve(postsDir, slug, "post.md")
-				if (!existsSync(fullPath)) return null
-				const content = readFileSync(fullPath, "utf-8")
+			Object.entries(postsModules).map(async ([path, loader]) => {
+				const parts = path.split("/")
+				const slug = parts[parts.length - 2]
+				const content = (await loader()) as string
 				const dates = await getFileDates(path)
 				const metadata = extractMetadata(content, "blog")
 				const { html } = await processMarkdown(content, "blog")
@@ -28,7 +24,7 @@ export async function GET() {
 			})
 		)
 	)
-		.filter((post) => post && !post.metadata.draft)
+		.filter((post) => post && post !== null && !post.metadata.draft)
 		.sort((a, b) => b.dates.updated.getTime() - a.dates.updated.getTime())
 
 	const feed = new Feed({

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { SiWhatsapp } from "@icons-pack/svelte-simple-icons"
-	import { Github, Instagram, Linkedin, Mail } from "@lucide/svelte"
+	import { Github, Instagram, Linkedin, Mail, ArrowRight } from "@lucide/svelte"
 	import type { Person, WithContext } from "schema-dts"
 	import BlurFade from "$lib/components/BlurFade.svelte"
 
@@ -55,6 +55,8 @@
 		content="Vitor Daniel, desenvolvedor web, full stack, portfólio, blog, tecnologia, programação, JavaScript, TypeScript, Svelte, SvelteKit, Node.js, React, desenvolvimento de software"
 	/>
 	<meta name="author" content="Vitor Daniel" />
+	<link rel="preconnect" href="https://github.com" />
+	<link rel="preconnect" href="https://www.linkedin.com" />
 </svelte:head>
 
 {@html `<script type="application/ld+json">${jsonLdString}</script>`}
@@ -132,6 +134,7 @@
 									src={post.coverImage}
 									alt={post.title}
 									sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
+									loading="lazy"
 									class="transition-transform duration-500 group-hover:scale-105"
 								/>
 							</figure>
@@ -166,19 +169,7 @@
 		<div class="mt-8 flex justify-center">
 			<a href="/blog" class="btn btn-ghost btn-sm gap-2">
 				Ver todas as postagens
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="lucide lucide-arrow-right"
-					><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg
-				>
+				<ArrowRight size={16} />
 			</a>
 		</div>
 	</section>

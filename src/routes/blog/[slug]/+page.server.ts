@@ -1,4 +1,3 @@
-import { readFile } from "node:fs/promises"
 import { processMarkdown, extractMetadata } from "$lib/server/markdown"
 import { getFileDates } from "$lib/server/utils"
 import type { EntryGenerator, PageServerLoad } from "./$types"
@@ -6,13 +5,15 @@ import type { EntryGenerator, PageServerLoad } from "./$types"
 export const prerender = true
 
 export const entries: EntryGenerator = async () => {
-	const posts = import.meta.glob("/src/content/posts/**/post.md")
+	const posts = import.meta.glob("/src/content/posts/**/post.md", {
+		query: "?raw",
+		import: "default"
+	})
 	const entries = await Promise.all(
-		Object.keys(posts).map(async (path) => {
+		Object.entries(posts).map(async ([path, loader]) => {
 			const parts = path.split("/")
 			const slug = parts[parts.length - 2]
-			const filePath = path.replace("/src", "./src")
-			const content = await readFile(filePath, "utf-8")
+			const content = (await loader()) as string
 			const metadata = extractMetadata(content, "blog")
 			return { slug: slug ?? "", draft: metadata.draft }
 		})
@@ -27,21 +28,24 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 		"cache-control": "public, max-age=0, s-maxage=3600, must-revalidate"
 	})
 	const relativePath = `/src/content/posts/${params.slug}/post.md`
-	const absolutePath = `./src/content/posts/${params.slug}/post.md`
 	const dates = await getFileDates(relativePath)
 
 	// Ler e processar o arquivo markdown
-	const fileContent = await readFile(absolutePath, "utf-8")
+	const postsModules = import.meta.glob("/src/content/posts/**/post.md", {
+		query: "?raw",
+		import: "default"
+	})
+	const postLoader = postsModules[relativePath]
+	if (!postLoader) {
+		throw new Error("Post not found")
+	}
+	const fileContent = (await postLoader()) as string
 	const { html, metadata, toc } = await processMarkdown(fileContent)
 
 	// Bloquear acesso a posts draft
 	if (metadata.draft) {
 		throw new Error("Post not found")
 	}
-
-	const postsModules = import.meta.glob("/src/content/posts/**/post.md", {
-		eager: false
-	})
 	const images = import.meta.glob(
 		"/src/content/posts/**/cover.{webp,png,jpg,jpeg}",
 		{
@@ -68,11 +72,10 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 	let seriesPosts: Array<{ slug: string; title: string }> = []
 	if (metadata.serie) {
 		const allPostsData = await Promise.all(
-			Object.keys(postsModules).map(async (path) => {
+			Object.entries(postsModules).map(async ([path, loader]) => {
 				const parts = path.split("/")
 				const slug = parts[parts.length - 2]
-				const filePath = path.replace("/src", "./src")
-				const content = await readFile(filePath, "utf-8")
+				const content = (await loader()) as string
 				// Usa extractMetadata para apenas pegar metadados (mais rápido)
 				const postMetadata = extractMetadata(content, "blog")
 				return {
@@ -98,11 +101,10 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 
 	// Buscar posts recentes
 	const allPostsData = await Promise.all(
-		Object.keys(postsModules).map(async (path) => {
+		Object.entries(postsModules).map(async ([path, loader]) => {
 			const parts = path.split("/")
 			const slug = parts[parts.length - 2]
-			const filePath = path.replace("/src", "./src")
-			const content = await readFile(filePath, "utf-8")
+			const content = (await loader()) as string
 			// Usa extractMetadata para apenas pegar metadados (mais rápido)
 			const postMetadata = extractMetadata(content, "blog")
 			const postDates = await getFileDates(path)

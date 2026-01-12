@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "@catppuccin/tailwindcss/mocha.css";
 @plugin "@tailwindcss/typography";
 @plugin "daisyui" {
 	themes: false;
@@ -149,16 +148,13 @@ h6:hover .anchor-link {
 .twoslash-popup-docs-tag-value {
 	color: rgba(255, 255, 255, 0.7) !important;
 }
-/* Mermaid diagram styles */
+
 .mermaid-diagram {
-	@apply flex justify-center my-6;
-	overflow-x: auto;
+	@apply flex justify-center my-6 overflow-x-auto;
 }
 
 .mermaid-diagram svg {
-	@apply max-w-full h-auto;
-	display: inline-block;
-	background-color: #181825;
+	@apply max-w-full h-auto inline-block bg-[#181825];
 	color: #cdd6f4;
 }
 

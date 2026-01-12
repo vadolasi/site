@@ -1,17 +1,17 @@
 import { create } from "xmlbuilder2"
 import { getFileDates } from "$lib/server/utils"
 import { extractMetadata } from "$lib/server/markdown"
-import { readdirSync, readFileSync, existsSync } from "fs"
-import { resolve } from "path"
 
 export const prerender = true
 
+const postsModules = import.meta.glob("/src/content/posts/**/post.md", {
+	eager: true,
+	query: "?raw",
+	import: "default"
+})
+
 export async function GET() {
-	const postsDir = resolve("src/content/posts")
-	const postDirs = readdirSync(postsDir, { withFileTypes: true }).filter((d) =>
-		d.isDirectory()
-	)
-	const siteUrl = "https://vitordaniel.com"
+	const siteUrl = "https://vitordaniel.is-a.dev"
 
 	const doc = create({ version: "1.0", encoding: "UTF-8" }).ele("urlset", {
 		xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -21,15 +21,11 @@ export async function GET() {
 	doc.ele("url").ele("loc").txt(`${siteUrl}/about`).up().up()
 	doc.ele("url").ele("loc").txt(`${siteUrl}/blog`).up().up()
 
-	for (const dir of postDirs) {
-		const slug = dir.name
-		const path = `/src/content/posts/${slug}/post.md`
-		const fullPath = resolve(postsDir, slug, "post.md")
-		if (!existsSync(fullPath)) continue
-		const content = readFileSync(fullPath, "utf-8")
-		const metadata = extractMetadata(content, "blog")
+	for (const [path, content] of Object.entries(postsModules)) {
+		const parts = path.split("/")
+		const slug = parts[parts.length - 2]
+		const metadata = extractMetadata(content as string, "blog")
 
-		// Pular posts draft
 		if (metadata.draft) continue
 
 		const dates = await getFileDates(path)

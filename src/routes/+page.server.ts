@@ -1,18 +1,27 @@
-import { readFile } from "node:fs/promises"
 import { processMarkdown, extractMetadata } from "$lib/server/markdown"
 import { getFileDates } from "$lib/server/utils"
 import type { PageServerLoad } from "./$types"
 
 export const prerender = true
 
+const bioModule = import.meta.glob("/src/content/about/bio.md", {
+	eager: true,
+	query: "?raw",
+	import: "default"
+})
+
+const bioContent = Object.values(bioModule)[0] as string
+
 export const load: PageServerLoad = async ({ setHeaders }) => {
 	setHeaders({
 		"cache-control": "public, max-age=0, s-maxage=3600, must-revalidate"
 	})
-	const bioContent = await readFile("./src/content/about/bio.md", "utf-8")
 	const { html: bioHtml } = await processMarkdown(bioContent, "none")
 
-	const postsModules = import.meta.glob("/src/content/posts/**/post.md")
+	const postsModules = import.meta.glob("/src/content/posts/**/post.md", {
+		query: "?raw",
+		import: "default"
+	})
 
 	const images = import.meta.glob(
 		"/src/content/posts/**/cover.{webp,png,jpg,jpeg}",
@@ -27,11 +36,10 @@ export const load: PageServerLoad = async ({ setHeaders }) => {
 	)
 
 	const postsData = await Promise.all(
-		Object.keys(postsModules).map(async (path) => {
+		Object.entries(postsModules).map(async ([path, loader]) => {
 			const parts = path.split("/")
 			const slug = parts[parts.length - 2]
-			const filePath = path.replace("/src", "./src")
-			const content = await readFile(filePath, "utf-8")
+			const content = (await loader()) as string
 			const metadata = extractMetadata(content, "blog")
 			const dates = await getFileDates(path)
 

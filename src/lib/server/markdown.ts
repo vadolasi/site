@@ -82,15 +82,13 @@ export function extractMetadata(
 ): MarkdownMetadata {
 	const { data: metadata } = matter(content)
 
-	let validatedMetadata: unknown = metadata
-
-	if (type !== "none") {
-		const schema =
-			type === "blog" ? MarkdownMetadataSchema : ProjectMetadataSchema
-		validatedMetadata = v.parse(schema, metadata)
+	if (type === "none") {
+		return metadata as MarkdownMetadata
 	}
 
-	return validatedMetadata
+	const schema =
+		type === "blog" ? MarkdownMetadataSchema : ProjectMetadataSchema
+	return v.parse(schema, metadata)
 }
 
 /**
@@ -116,13 +114,18 @@ export async function processMarkdown(
 
 	const { data: metadata, content: markdownContent } = matter(content)
 
-	let validatedMetadata: unknown = metadata
-
-	if (type !== "none") {
-		const schema =
-			type === "blog" ? MarkdownMetadataSchema : ProjectMetadataSchema
-		validatedMetadata = v.parse(schema, metadata)
+	if (type === "none") {
+		const { html, toc } = await renderMarkdownToHtml(markdownContent)
+		return {
+			html,
+			metadata: metadata as MarkdownMetadata,
+			toc
+		}
 	}
+
+	const schema =
+		type === "blog" ? MarkdownMetadataSchema : ProjectMetadataSchema
+	const validatedMetadata = v.parse(schema, metadata)
 
 	// Armazena no cache
 	if (cacheKey) {
@@ -154,7 +157,6 @@ async function renderMarkdownToHtml(
 		.use(withToc)
 		.use(rehypeMermaid)
 		.use(rehypeGithubAlerts, {
-			// Map GitHub alert keywords to DaisyUI variants
 			build: (
 				alertOptions: Record<string, unknown>,
 				originalChildren: Array<Record<string, unknown>>

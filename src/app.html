@@ -1,16 +1,24 @@
 <!doctype html>
 <html lang="pt-BR" data-theme="mocha">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="color-scheme" content="dark" />
+		<script
+			defer
+			src="/svelte-data.js"
+			data-website-id="b639b17b-d898-4860-a02c-0a01e6085448"
+			data-host-url="https://umami-flame-psi.vercel.app"
+		></script>
+		<style>
+			html {
+				--content-padding: 0.375rem;
+			}
+		</style>
+		%sveltekit.head%
+	</head>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script defer src="/svelte-data.js" data-website-id="b639b17b-d898-4860-a02c-0a01e6085448"
-    data-host-url="https://umami-flame-psi.vercel.app"></script>
-  %sveltekit.head%
-</head>
-
-<body data-sveltekit-preload-data="hover">
-  <div style="display: contents">%sveltekit.body%</div>
-</body>
-
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
 </html>

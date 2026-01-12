@@ -1,4 +1,3 @@
-import { readFile } from "node:fs/promises"
 import { extractMetadata } from "$lib/server/markdown"
 import { getFileDates } from "$lib/server/utils"
 import type { PageServerLoad } from "./$types"
@@ -9,7 +8,10 @@ export const load: PageServerLoad = async ({ setHeaders }) => {
 	setHeaders({
 		"cache-control": "public, max-age=0, s-maxage=3600, must-revalidate"
 	})
-	const posts = import.meta.glob("/src/content/posts/**/post.md")
+	const posts = import.meta.glob("/src/content/posts/**/post.md", {
+		query: "?raw",
+		import: "default"
+	})
 	const images = import.meta.glob(
 		"/src/content/posts/**/cover.{webp,png,jpg,jpeg}",
 		{
@@ -19,11 +21,10 @@ export const load: PageServerLoad = async ({ setHeaders }) => {
 	)
 
 	const postsList = await Promise.all(
-		Object.keys(posts).map(async (path) => {
+		Object.entries(posts).map(async ([path, loader]) => {
 			const parts = path.split("/")
 			const slug = parts[parts.length - 2]
-			const filePath = path.replace("/src", "./src")
-			const content = await readFile(filePath, "utf-8")
+			const content = (await loader()) as string
 			const metadata = extractMetadata(content, "blog")
 			const dates = await getFileDates(path)
 

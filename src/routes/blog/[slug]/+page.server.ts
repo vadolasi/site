@@ -40,28 +40,45 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 		throw new Error("Post not found")
 	}
 	const fileContent = (await postLoader()) as string
-	const { html, metadata, toc } = await processMarkdown(fileContent)
 
-	// Bloquear acesso a posts draft
-	if (metadata.draft) {
-		throw new Error("Post not found")
-	}
-	const images = import.meta.glob(
-		"/src/content/posts/**/cover.{webp,png,jpg,jpeg}",
+	// Carregar todas as imagens do post (não apenas cover)
+	const allImages = import.meta.glob(
+		"/src/content/posts/**/*.{webp,png,jpg,jpeg,gif,svg}",
 		{
 			eager: false,
 			query: { enhanced: true }
 		}
 	)
 
+	// Filtrar imagens deste post específico
+	const postImages: Record<string, unknown> = {}
+	for (const [path, loader] of Object.entries(allImages)) {
+		if (path.includes(`/src/content/posts/${params.slug}/`)) {
+			postImages[path] = await loader()
+		}
+	}
+
+	const { html, metadata, toc } = await processMarkdown(
+		fileContent,
+		"blog",
+		undefined,
+		params.slug,
+		postImages
+	)
+
+	// Bloquear acesso a posts draft
+	if (metadata.draft) {
+		throw new Error("Post not found")
+	}
+
 	// Processar imagem de capa
 	let coverImage: Record<string, unknown> | null = null
 	{
-		const coverKey = Object.keys(images).find((k) =>
+		const coverKey = Object.keys(postImages).find((k) =>
 			k.includes(`/src/content/posts/${params.slug}/cover.`)
 		)
 		if (coverKey) {
-			const imageModule = (await images[coverKey]()) as {
+			const imageModule = postImages[coverKey] as {
 				default: Record<string, unknown>
 			}
 			coverImage = imageModule.default
@@ -100,6 +117,14 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 	}
 
 	// Buscar posts recentes
+	const coverImages = import.meta.glob(
+		"/src/content/posts/**/cover.{webp,png,jpg,jpeg}",
+		{
+			eager: false,
+			query: { enhanced: true }
+		}
+	)
+
 	const allPostsData = await Promise.all(
 		Object.entries(postsModules).map(async ([path, loader]) => {
 			const parts = path.split("/")
@@ -111,11 +136,11 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 
 			let postCoverImage: Record<string, unknown> | null = null
 			{
-				const coverKey = Object.keys(images).find((k) =>
+				const coverKey = Object.keys(coverImages).find((k) =>
 					k.includes(`/src/content/posts/${slug}/cover.`)
 				)
 				if (coverKey) {
-					const imageModule = (await images[coverKey]()) as {
+					const imageModule = (await coverImages[coverKey]()) as {
 						default: Record<string, unknown>
 					}
 					postCoverImage = imageModule.default

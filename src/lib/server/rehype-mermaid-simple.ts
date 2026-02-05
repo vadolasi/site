@@ -2,6 +2,7 @@ import mermaid from "isomorphic-mermaid"
 import svgToDataURI from "mini-svg-data-uri"
 import { toText } from "hast-util-to-text"
 import { visitParents } from "unist-util-visit-parents"
+import type { Node } from "unist"
 
 interface CodeInstance {
 	diagram: string
@@ -49,7 +50,7 @@ export default function rehypeMermaid(options?: RehypeMermaidOptions) {
 		// already initialized
 	}
 
-	return async (ast: Record<string, unknown>) => {
+	return async (ast: Node) => {
 		const instances: CodeInstance[] = []
 
 		visitParents(
@@ -61,7 +62,10 @@ export default function rehypeMermaid(options?: RehypeMermaidOptions) {
 			) => {
 				// Check if it's a code block with language-mermaid
 				if (node.tagName === "code") {
-					let className = node.properties?.className
+					const properties = node.properties as
+						| Record<string, unknown>
+						| undefined
+					let className = properties?.className
 					if (typeof className === "string") {
 						className = className.split(" ")
 					}
@@ -71,7 +75,9 @@ export default function rehypeMermaid(options?: RehypeMermaidOptions) {
 						className.includes("language-mermaid")
 					) {
 						instances.push({
-							diagram: toText(node, { whitespace: "pre" }),
+							diagram: toText(node as unknown as Parameters<typeof toText>[0], {
+								whitespace: "pre"
+							}),
 							ancestors: ancestors as Array<Record<string, unknown>>
 						})
 					}

@@ -18,7 +18,9 @@ import * as v from "valibot"
 import rehypeExternalLinks from "rehype-external-links"
 import rehypeMermaid from "./rehype-mermaid-simple"
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections"
-import { rehypeGithubAlerts } from "rehype-github-alerts"
+import { rehypeGithubAlerts, type IAlert } from "rehype-github-alerts"
+import { rehypeEnhancedImages } from "./rehype-enhanced-images"
+import type { ElementContent } from "hast"
 
 const SerieSchema = v.object({
 	id: v.string(),
@@ -97,14 +99,20 @@ export function extractMetadata(
 export async function processMarkdown(
 	content: string,
 	type: MetadataType = "blog",
-	cacheKey?: string
+	cacheKey?: string,
+	slug?: string,
+	images?: Record<string, unknown>
 ): Promise<ProcessedMarkdown> {
 	// Usa cache se disponível
 	if (cacheKey && metadataCache.has(cacheKey)) {
 		const metadata = metadataCache.get(cacheKey)!
 		// Ainda precisa processar HTML, mas metadados já estão validados
 		const { content: markdownContent } = matter(content)
-		const { html, toc } = await renderMarkdownToHtml(markdownContent)
+		const { html, toc } = await renderMarkdownToHtml(
+			markdownContent,
+			slug,
+			images
+		)
 		return {
 			html,
 			metadata,
@@ -115,7 +123,11 @@ export async function processMarkdown(
 	const { data: metadata, content: markdownContent } = matter(content)
 
 	if (type === "none") {
-		const { html, toc } = await renderMarkdownToHtml(markdownContent)
+		const { html, toc } = await renderMarkdownToHtml(
+			markdownContent,
+			slug,
+			images
+		)
 		return {
 			html,
 			metadata: metadata as MarkdownMetadata,
@@ -132,7 +144,11 @@ export async function processMarkdown(
 		metadataCache.set(cacheKey, validatedMetadata)
 	}
 
-	const { html, toc } = await renderMarkdownToHtml(markdownContent)
+	const { html, toc } = await renderMarkdownToHtml(
+		markdownContent,
+		slug,
+		images
+	)
 
 	return {
 		html,
@@ -146,7 +162,9 @@ export async function processMarkdown(
  * Usado internamente para cache
  */
 async function renderMarkdownToHtml(
-	markdownContent: string
+	markdownContent: string,
+	slug?: string,
+	images?: Record<string, unknown>
 ): Promise<{ html: string; toc?: Record<string, unknown> }> {
 	const processor = unified()
 		.use(remarkParse)
@@ -155,37 +173,43 @@ async function renderMarkdownToHtml(
 		.use(rehypeShiftHeading, { shift: 1 })
 		.use(rehypeSlug)
 		.use(withToc)
-		.use(rehypeMermaid)
-		.use(rehypeGithubAlerts, {
-			build: (
-				alertOptions: Record<string, unknown>,
-				originalChildren: Array<Record<string, unknown>>
-			) => {
-				const keyword = String(alertOptions.keyword || "note").toLowerCase()
-				const variantMap: Record<string, string> = {
-					tip: "alert-info",
-					success: "alert-success",
-					important: "alert-warning",
-					warning: "alert-warning",
-					caution: "alert-error"
-				}
-				const variant = variantMap[keyword]
+		.use(() => rehypeMermaid())
+		.use(() =>
+			rehypeGithubAlerts({
+				build: (alertOptions: IAlert, originalChildren: ElementContent[]) => {
+					const keyword = alertOptions.keyword.toLowerCase()
+					const variantMap: Record<string, string> = {
+						tip: "alert-info",
+						success: "alert-success",
+						important: "alert-warning",
+						warning: "alert-warning",
+						caution: "alert-error"
+					}
+					const variant = variantMap[keyword] || "alert-info"
 
-				return {
-					type: "element",
-					tagName: "div",
-					properties: { className: ["alert", variant], role: "alert" },
-					children: [
-						{
-							type: "element",
-							tagName: "div",
-							properties: {},
-							children: [...originalChildren]
-						}
-					]
+					return {
+						type: "element",
+						tagName: "div",
+						properties: { className: ["alert", variant], role: "alert" },
+						children: [
+							{
+								type: "element",
+								tagName: "div",
+								properties: {},
+								children: [...originalChildren]
+							}
+						]
+					} as ElementContent
 				}
-			}
-		})
+			})
+		)
+
+	// Adicionar plugin de enhanced images se slug e images foram fornecidos
+	if (slug && images) {
+		processor.use(() => rehypeEnhancedImages(slug, images))
+	}
+
+	processor
 		.use(rehypeAutolinkHeadings, {
 			behavior: "prepend",
 			properties: {
@@ -219,7 +243,7 @@ async function renderMarkdownToHtml(
 
 	const file = await processor.process(markdownContent)
 	const html = String(file)
-	return { html, toc: file.data.toc }
+	return { html, toc: file.data.toc as Record<string, unknown> | undefined }
 }
 
 /**

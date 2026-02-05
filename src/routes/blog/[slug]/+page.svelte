@@ -6,6 +6,8 @@
 	import WrittenBy from "$lib/components/WrittenBy.svelte"
 	import { getRelativeTime } from "$lib/utils"
 	import TableOfContents from "./TableOfContents.svelte"
+	import ImageLightbox from "$lib/components/ImageLightbox.svelte"
+	import NewsletterSubscribe from "$lib/components/NewsletterSubscribe.svelte"
 
 	const { data } = $props()
 	const {
@@ -14,7 +16,25 @@
 		coverImage,
 		seriesPosts,
 		dates
-	} = $derived(data)
+	} = $derived(
+		data as {
+			html: string
+			meta: {
+				title: string
+				description: string
+				keywords: string[]
+				toc?: Array<{
+					id: string
+					value: string
+					depth: number
+					children?: Array<{ id: string; value: string; depth: number }>
+				}>
+			}
+			coverImage?: { img: { src: string } } | null
+			seriesPosts?: Array<{ slug: string; title: string }>
+			dates: { created: Date; updated: Date }
+		}
+	)
 
 	const titleSlug = $derived(
 		title
@@ -23,15 +43,13 @@
 			.replace(/^-+|-+$/g, "")
 	)
 
-	const coverSrc = $derived(
-		typeof coverImage === "string" ? coverImage : coverImage?.img?.src
-	)
+	const coverSrc = $derived(coverImage?.img?.src)
 
 	const jsonLd: WithContext<TechArticle> = $derived({
 		"@context": "https://schema.org",
 		"@type": "TechArticle",
 		headline: title,
-		image: [coverSrc],
+		image: coverSrc ? [coverSrc] : [],
 		description,
 		keywords,
 		author: {
@@ -137,12 +155,12 @@
 		</span>
 	</div>
 
-	{#if coverImage}
+	{#if coverImage && coverImage.img?.src}
 		<figure
 			class="w-full aspect-video overflow-hidden rounded-2xl shadow-lg bg-base-200"
 		>
 			<enhanced:img
-				src={coverImage}
+				src={coverImage.img.src}
 				alt={title}
 				class="w-full h-full object-cover"
 			/>
@@ -195,10 +213,13 @@
 		>
 			{@html html}
 
-			<div class="mt-16 not-prose">
+			<div class="mt-16 not-prose space-y-8">
 				<WrittenBy />
+				<NewsletterSubscribe />
 			</div>
 		</article>
+
+		<ImageLightbox />
 
 		<script
 			src="https://giscus.app/client.js"
@@ -221,7 +242,9 @@
 
 	<aside class="hidden xl:block absolute left-full top-0 ml-16 w-64 h-full">
 		<div class="sticky top-24">
-			<TableOfContents {toc} />
+			{#if toc && toc.length > 0}
+				<TableOfContents {toc} />
+			{/if}
 		</div>
 	</aside>
 </div>

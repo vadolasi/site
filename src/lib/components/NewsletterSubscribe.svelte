@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { Mail, CheckCircle, AlertCircle } from "@lucide/svelte"
+	import { Mail, CircleCheck, CircleAlert } from "@lucide/svelte"
+
+	let { variant = "card" } = $props()
 
 	let email = $state("")
 	let isLoading = $state(false)
@@ -42,8 +44,12 @@
 	}
 </script>
 
-<div class="bg-base-200 p-8 rounded-xl border border-base-300 not-prose">
-	<div class="flex items-start gap-4 mb-4">
+<div
+	class="rounded-xl border border-base-300 not-prose {variant === 'card'
+		? 'bg-base-200 p-6 sm:p-8'
+		: 'bg-transparent p-0 border-transparent'}"
+>
+	<div class="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 mb-4">
 		<Mail class="text-primary shrink-0 mt-1" size={24} />
 		<div>
 			<h3 class="font-bold text-lg text-base-content">Newsletter</h3>
@@ -61,7 +67,8 @@
 				bind:value={email}
 				required
 				disabled={isLoading}
-				class="input input-bordered input-sm flex-1 {status === 'error'
+				class="input input-bordered input-sm w-full sm:flex-1 {status ===
+				'error'
 					? 'input-error'
 					: ''}"
 			/>
@@ -87,9 +94,9 @@
 					: 'bg-error/10 text-error'}"
 			>
 				{#if status === "success"}
-					<CheckCircle size={18} />
+					<CircleCheck size={18} />
 				{:else}
-					<AlertCircle size={18} />
+					<CircleAlert size={18} />
 				{/if}
 				<span>{message}</span>
 			</div>

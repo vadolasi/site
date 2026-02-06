@@ -45,6 +45,19 @@
 
 	const coverSrc = $derived(coverImage?.img?.src)
 
+	const htmlParts = $derived(
+		(() => {
+			const chunks = html.split("</p>")
+			if (chunks.length <= 1) {
+				return { before: html, after: "" }
+			}
+			const midpoint = Math.ceil((chunks.length - 1) / 2)
+			const before = `${chunks.slice(0, midpoint).join("</p>")}</p>`
+			const after = chunks.slice(midpoint).join("</p>")
+			return { before, after }
+		})()
+	)
+
 	const jsonLd: WithContext<TechArticle> = $derived({
 		"@context": "https://schema.org",
 		"@type": "TechArticle",
@@ -211,7 +224,19 @@
 			class="prose prose-lg max-w-none prose-headings:scroll-mt-24 mb-16"
 			id="scrollspy-content"
 		>
-			{@html html}
+			{@html htmlParts.before}
+
+			<div
+				class="mt-12 not-prose space-y-4 rounded-2xl border border-base-300 bg-base-200 p-6 sm:p-8"
+			>
+				<p class="text-base font-medium text-base-content/90">
+					Está gostando? Assine a newsletter para ficar por dentro de tudo o que
+					eu postar. Tem várias coisas legais vindo aí.
+				</p>
+				<NewsletterSubscribe variant="inline" />
+			</div>
+
+			{@html htmlParts.after}
 
 			<div class="mt-16 not-prose space-y-8">
 				<WrittenBy />

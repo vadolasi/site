@@ -18,8 +18,21 @@ export const POST: RequestHandler = async ({ request }) => {
 			)
 		}
 
+		const { data, error: createError } = await resend.contacts.create({
+			email: "steve.wozniak@gmail.com",
+			unsubscribed: false
+		})
+
+		if (createError) {
+			console.error("Resend create contact error:", createError)
+			return json(
+				{ success: false, message: "Erro ao criar contato na newsletter" },
+				{ status: 500 }
+			)
+		}
+
 		const { error } = await resend.contacts.segments.add({
-			email: email.toLowerCase(),
+			contactId: data.id,
 			segmentId: SEGMENT_ID
 		})
 

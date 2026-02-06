@@ -7,6 +7,7 @@
 	let message = $state("")
 
 	async function handleSubscribe(e: SubmitEvent) {
+		;(window as any).umami?.track("newsletter_subscribe")
 		e.preventDefault()
 		isLoading = true
 		status = "idle"
@@ -43,7 +44,7 @@
 
 <div class="bg-base-200 p-8 rounded-xl border border-base-300 not-prose">
 	<div class="flex items-start gap-4 mb-4">
-		<Mail class="text-primary flex-shrink-0 mt-1" size={24} />
+		<Mail class="text-primary shrink-0 mt-1" size={24} />
 		<div>
 			<h3 class="font-bold text-lg text-base-content">Newsletter</h3>
 			<p class="text-sm text-base-content/60">

@@ -15,7 +15,8 @@
 		meta: { title, description, keywords, toc },
 		coverImage,
 		seriesPosts,
-		dates
+		dates,
+		latestPosts
 	} = $derived(
 		data as {
 			html: string
@@ -33,6 +34,12 @@
 			coverImage?: { img: { src: string } } | null
 			seriesPosts?: Array<{ slug: string; title: string }>
 			dates: { created: Date; updated: Date }
+			latestPosts: Array<{
+				slug: string
+				title: string
+				description: string
+				coverImage?: { img: { src: string } } | null
+			}>
 		}
 	)
 
@@ -243,6 +250,40 @@
 				<NewsletterSubscribe />
 			</div>
 		</article>
+
+		<section class="not-prose border-t border-base-200 pt-10 mt-6 mb-8">
+			<div class="flex items-center justify-between gap-4 mb-6">
+				<h2 class="text-xl font-bold">Outros artigos</h2>
+				<a href="/blog" class="link link-hover text-sm"> Ir para o blog </a>
+			</div>
+
+			<div class="grid gap-6 md:grid-cols-2">
+				{#each latestPosts as post}
+					<a
+						href="/blog/{post.slug}"
+						class="group rounded-xl border border-base-200 bg-base-100 overflow-hidden transition-all hover:shadow-md"
+					>
+						{#if post.coverImage?.img?.src}
+							<figure class="aspect-video bg-base-200 overflow-hidden">
+								<enhanced:img
+									src={post.coverImage.img.src}
+									alt={post.title}
+									class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+								/>
+							</figure>
+						{/if}
+						<div class="p-5">
+							<h3 class="font-semibold mb-2 group-hover:text-primary">
+								{post.title}
+							</h3>
+							<p class="text-sm text-base-content/70 line-clamp-2">
+								{post.description}
+							</p>
+						</div>
+					</a>
+				{/each}
+			</div>
+		</section>
 
 		<ImageLightbox />
 

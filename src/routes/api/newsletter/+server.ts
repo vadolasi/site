@@ -19,7 +19,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 
 		const { data, error: createError } = await resend.contacts.create({
-			email: "steve.wozniak@gmail.com",
+			email,
 			unsubscribed: false
 		})
 

@@ -49,7 +49,10 @@ export const load: PageServerLoad = async ({ setHeaders }) => {
 				k.includes(`/src/content/posts/${slug}/cover.`)
 			)
 			if (coverKey) {
-				coverImage = (images[coverKey] as Record<string, unknown>)?.default
+				const imageModule = images[coverKey] as {
+					default: Record<string, unknown>
+				}
+				coverImage = imageModule.default
 			}
 
 			return {

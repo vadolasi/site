@@ -8,6 +8,7 @@
 	import TableOfContents from "./TableOfContents.svelte"
 	import ImageLightbox from "$lib/components/ImageLightbox.svelte"
 	import NewsletterSubscribe from "$lib/components/NewsletterSubscribe.svelte"
+	import Giscus from "@giscus/svelte"
 
 	const { data } = $props()
 	const {
@@ -52,37 +53,38 @@
 
 	const coverSrc = $derived(coverImage?.img?.src)
 
-	const htmlParts = $derived(
-		(() => {
-			const chunks = html.split("</p>")
-			if (chunks.length <= 1) {
-				return { before: html, after: "" }
-			}
-			const midpoint = Math.ceil((chunks.length - 1) / 2)
-			const before = `${chunks.slice(0, midpoint).join("</p>")}</p>`
-			const after = chunks.slice(midpoint).join("</p>")
-			return { before, after }
-		})()
-	)
+	const ogImageUrl = $derived.by(() => {
+		if (!coverImage?.img?.src) return null
+		const origin = page.url?.origin ?? ""
+		return `${origin}/images/blog/${page.params.slug}.png`
+	})
+
+	const htmlParts = $derived.by(() => {
+		const chunks = html.split("</p>")
+		if (chunks.length <= 1) return { before: html, after: "" }
+		const midpoint = Math.ceil((chunks.length - 1) / 2)
+		return {
+			before: `${chunks.slice(0, midpoint).join("</p>")}</p>`,
+			after: chunks.slice(midpoint).join("</p>")
+		}
+	})
 
 	const jsonLd: WithContext<TechArticle> = $derived({
 		"@context": "https://schema.org",
 		"@type": "TechArticle",
 		headline: title,
-		image: coverSrc ? [coverSrc] : [],
-		description,
-		keywords,
+		image: coverImage?.img?.src ? [coverImage.img.src] : [],
+		description: description,
+		keywords: keywords,
+		url: page.url.href,
 		author: {
-			"@context": "https://schema.org",
 			"@type": "Person",
-			name: "Vitor Daniel Lopes dos Santos",
-			url: "https://vitordaniel.is-a.dev",
-			image: "https://github.com/vadolasi.png",
-			jobTitle: "Desenvolvedor Web Full Stack",
-			additionalName: "vadolasi"
+			name: "Vitor Daniel",
+			url: "https://vitordaniel.is-a.dev"
 		},
-		inLanguage: "pt-BR",
-		isFamilyFriendly: true
+		datePublished: dates.created.toISOString(),
+		dateModified: dates.updated.toISOString(),
+		inLanguage: "pt-BR"
 	})
 
 	const jsonLdString = $derived(JSON.stringify(jsonLd).replace(/</g, "\\u003c"))
@@ -112,17 +114,22 @@
 	{/if}
 	<meta name="author" content="Vitor Daniel" />
 
+	<link rel="canonical" href={page.url.href} />
+
 	<meta property="og:type" content="article" />
 	<meta property="og:title" content={title} />
 	<meta property="og:description" content={description} />
+	<meta property="og:url" content={page.url.href} />
 
-	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content={title} />
 	<meta name="twitter:description" content={description} />
 
-	{#if coverSrc}
-		<meta property="og:image" content={coverSrc} />
-		<meta name="twitter:image" content={coverSrc} />
+	{#if ogImageUrl}
+		<meta property="og:image" content={ogImageUrl ?? ""} />
+		<meta name="twitter:image" content={ogImageUrl ?? ""} />
+	{:else if coverSrc}
+		<meta property="og:image" content={coverSrc ?? ""} />
+		<meta name="twitter:image" content={coverSrc ?? ""} />
 	{/if}
 </svelte:head>
 
@@ -287,23 +294,21 @@
 
 		<ImageLightbox />
 
-		<script
-			src="https://giscus.app/client.js"
-			data-repo="vadolasi/site"
-			data-repo-id="R_kgDOQ3Y-Gg"
-			data-category="Announcements"
-			data-category-id="DIC_kwDOQ3Y-Gs4C0zP9"
-			data-mapping="pathname"
-			data-strict="0"
-			data-reactions-enabled="1"
-			data-emit-metadata="0"
-			data-input-position="bottom"
-			data-theme="catppuccin_mocha"
-			data-lang="pt"
-			crossorigin="anonymous"
-			async
-		>
-		</script>
+		<Giscus
+			id="giscus"
+			repo="vadolasi/site"
+			repoId="R_kgDOQ3Y-Gg"
+			category="Announcements"
+			categoryId="DIC_kwDOQ3Y-Gs4C0zP9"
+			mapping="pathname"
+			term={page.url.pathname}
+			reactionsEnabled="1"
+			emitMetadata="0"
+			inputPosition="bottom"
+			theme="catppuccin_mocha"
+			lang="pt"
+			loading="lazy"
+		/>
 	</main>
 
 	<aside class="hidden xl:block absolute left-full top-0 ml-16 w-64 h-full">

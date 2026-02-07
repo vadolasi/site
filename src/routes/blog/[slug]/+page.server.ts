@@ -1,5 +1,6 @@
 import { processMarkdown, extractMetadata } from "$lib/server/markdown"
 import { getFileDates } from "$lib/server/utils"
+import { error } from "@sveltejs/kit"
 import type { EntryGenerator, PageServerLoad } from "./$types"
 
 export const prerender = true
@@ -24,6 +25,9 @@ export const entries: EntryGenerator = async () => {
 }
 
 export const load: PageServerLoad = async ({ params, setHeaders }) => {
+	if (params.slug.endsWith(".png")) {
+		throw error(404, "Not found")
+	}
 	setHeaders({
 		"cache-control": "public, max-age=0, s-maxage=3600, must-revalidate"
 	})

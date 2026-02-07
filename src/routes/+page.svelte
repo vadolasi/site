@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { SiWhatsapp } from "@icons-pack/svelte-simple-icons"
 	import { Github, Instagram, Linkedin, Mail, ArrowRight } from "@lucide/svelte"
-	import type { Person, WithContext } from "schema-dts"
+	import type { Person, WebSite, WithContext } from "schema-dts"
 	import BlurFade from "$lib/components/BlurFade.svelte"
 
 	let { data } = $props()
@@ -31,7 +31,7 @@
 		}
 	]
 
-	const jsonLd: WithContext<Person> = $derived({
+	const personSchema: WithContext<Person> = $derived({
 		"@context": "https://schema.org",
 		"@type": "Person",
 		name: "Vitor Daniel Lopes dos Santos",
@@ -41,7 +41,17 @@
 		additionalName: "vadolasi"
 	})
 
-	const jsonLdString = $derived(JSON.stringify(jsonLd).replace(/</g, "\\u003c"))
+	const websiteSchema: WithContext<WebSite> = {
+		"@context": "https://schema.org",
+		"@type": "WebSite",
+		name: "Vitor Daniel",
+		alternateName: ["Vitor Daniel Portfolio"],
+		url: "https://vitordaniel.is-a.dev"
+	}
+
+	const jsonLdString = $derived(
+		JSON.stringify([personSchema, websiteSchema]).replace(/</g, "\\u003c")
+	)
 </script>
 
 <svelte:head>
@@ -131,7 +141,7 @@
 						{#if post.coverImage}
 							<figure class="aspect-21/9 overflow-hidden bg-base-200">
 								<enhanced:img
-									src={post.coverImage}
+									src={post.coverImage as unknown as string}
 									alt={post.title}
 									sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
 									loading="lazy"

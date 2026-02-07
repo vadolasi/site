@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from "$app/state"
 	import "./layout.css"
 	import favicon from "$lib/assets/favicon.svg"
 
@@ -14,6 +15,9 @@
 		href="/atom.xml"
 	/>
 	<link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+	<link rel="canonical" href={page.url.href} />
+	<meta property="og:site_name" content="Vitor Daniel" />
+	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>
 
 <div

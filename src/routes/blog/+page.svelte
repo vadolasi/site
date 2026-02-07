@@ -2,7 +2,16 @@
 	import WrittenBy from "$lib/components/WrittenBy.svelte"
 	import NewsletterSubscribe from "$lib/components/NewsletterSubscribe.svelte"
 
-	const { data } = $props()
+	type Post = {
+		slug: string
+		title: string
+		description: string
+		dates: { created: Date }
+		coverImage?: any
+		keywords?: string[]
+	}
+
+	const { data } = $props() as { data: { posts: Post[] } }
 </script>
 
 <header class="mb-8">
@@ -58,9 +67,9 @@
 					{post.description}
 				</p>
 
-				{#if post.keywords?.length > 0}
+				{#if (post.keywords ?? []).length > 0}
 					<div class="flex flex-wrap gap-2 mt-auto">
-						{#each post.keywords.slice(0, 3) as keyword}
+						{#each (post.keywords ?? []).slice(0, 3) as keyword}
 							<span class="badge badge-sm badge-ghost opacity-70"
 								>#{keyword}</span
 							>

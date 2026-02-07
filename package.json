@@ -93,6 +93,8 @@
     "xmlbuilder2": "^4.0.3"
   },
   "dependencies": {
+    "@ethercorps/sveltekit-og": "^4.2.1",
+    "@giscus/svelte": "^3.1.0",
     "@neondatabase/serverless": "^1.0.2",
     "clsx": "^2.1.1",
     "resend": "^6.9.1",

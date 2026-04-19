@@ -32,14 +32,14 @@
 					children?: Array<{ id: string; value: string; depth: number }>
 				}>
 			}
-			coverImage?: { img: { src: string } } | null
+			coverImage?: { img: { src: string; w: number; h: number } } | null
 			seriesPosts?: Array<{ slug: string; title: string }>
 			dates: { created: Date; updated: Date }
 			latestPosts: Array<{
 				slug: string
 				title: string
 				description: string
-				coverImage?: { img: { src: string } } | null
+				coverImage?: { img: { src: string; w: number; h: number } } | null
 			}>
 		}
 	)
@@ -186,9 +186,11 @@
 		<figure
 			class="w-full aspect-video overflow-hidden rounded-2xl shadow-lg bg-base-200"
 		>
-			<enhanced:img
+			<img
 				src={coverImage.img.src}
 				alt={title}
+				width={coverImage.img.w}
+				height={coverImage.img.h}
 				class="w-full h-full object-cover"
 			/>
 		</figure>
@@ -272,9 +274,11 @@
 					>
 						{#if post.coverImage?.img?.src}
 							<figure class="aspect-video bg-base-200 overflow-hidden">
-								<enhanced:img
+								<img
 									src={post.coverImage.img.src}
 									alt={post.title}
+									width={post.coverImage.img.w}
+									height={post.coverImage.img.h}
 									class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
 								/>
 							</figure>

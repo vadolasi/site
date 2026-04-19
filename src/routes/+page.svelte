@@ -4,7 +4,19 @@
 	import type { Person, WebSite, WithContext } from "schema-dts"
 	import BlurFade from "$lib/components/BlurFade.svelte"
 
-	let { data } = $props()
+	interface Post {
+		slug: string
+		title: string
+		description: string
+		dates: { created: Date }
+		coverImage: {
+			img: { src: string; w: number; h: number }
+			sources: { avif: string; webp: string }
+		} | null
+		keywords?: string[]
+	}
+
+	let { data } = $props() as { data: { latestPosts: Post[]; bioHtml: string } }
 	let { latestPosts, bioHtml } = $derived(data)
 
 	let links = [
@@ -140,12 +152,13 @@
 					>
 						{#if post.coverImage}
 							<figure class="aspect-21/9 overflow-hidden bg-base-200">
-								<enhanced:img
-									src={post.coverImage as unknown as string}
+								<img
+									src={post.coverImage.img.src}
 									alt={post.title}
-									sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
+									width={post.coverImage.img.w}
+									height={post.coverImage.img.h}
 									loading="lazy"
-									class="transition-transform duration-500 group-hover:scale-105"
+									class="transition-transform duration-500 group-hover:scale-105 object-cover w-full h-full"
 								/>
 							</figure>
 						{/if}

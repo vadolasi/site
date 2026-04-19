@@ -37,10 +37,11 @@
 				<figure
 					class="w-full md:w-56 shrink-0 aspect-video md:aspect-square bg-base-200 overflow-hidden"
 				>
-					<enhanced:img
-						src={post.coverImage}
+					<img
+						src={post.coverImage.img.src}
 						alt={post.title}
-						sizes="(max-width: 768px) 100vw, 250px"
+						width={post.coverImage.img.w}
+						height={post.coverImage.img.h}
 						loading={i < 3 ? "eager" : "lazy"}
 						class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
 					/>

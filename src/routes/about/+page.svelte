@@ -136,11 +136,12 @@
 					<figure
 						class="w-full aspect-video overflow-hidden bg-base-200 border-b border-base-300"
 					>
-						<enhanced:img
-							src={project.coverImage}
+						<img
+							src={project.coverImage.img.src}
 							alt={project.title}
-							class="transition-transform duration-500 group-hover:scale-105"
-							sizes="(max-width: 720px) 100vw, 672px"
+							width={project.coverImage.img.w}
+							height={project.coverImage.img.h}
+							class="transition-transform duration-500 group-hover:scale-105 w-full h-full object-cover"
 						/>
 					</figure>
 				{/if}
@@ -220,11 +221,12 @@
 			>
 				{#if project.coverImage}
 					<figure class="w-full">
-						<enhanced:img
-							src={project.coverImage}
+						<img
+							src={project.coverImage.img.src}
 							alt={project.title}
+							width={project.coverImage.img.w}
+							height={project.coverImage.img.h}
 							class="w-full object-cover"
-							sizes="(max-width: 640px) 100vw, 320px"
 						/>
 					</figure>
 				{/if}

@@ -46,7 +46,7 @@ export const entries: EntryGenerator = async () => {
 const ogCache = new Map<
 	string,
 	{
-		body: Uint8Array
+		body: ArrayBuffer
 		contentType: string
 	}
 >()
@@ -80,7 +80,7 @@ export const GET: RequestHandler = async ({ params }) => {
 		},
 		props
 	)
-	const body = new Uint8Array(await imageResponse.arrayBuffer())
+	const body = await imageResponse.arrayBuffer()
 	const contentType = imageResponse.headers.get("content-type") ?? "image/png"
 	ogCache.set(slug, { body, contentType })
 	return new Response(body, {

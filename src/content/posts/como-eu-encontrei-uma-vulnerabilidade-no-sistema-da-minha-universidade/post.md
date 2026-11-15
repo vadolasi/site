@@ -54,6 +54,10 @@ Fiquei muito feliz com o desfecho. A STI demonstrou ser uma equipe madura e prof
 
 Essa experiência reforçou para mim que, agir com ética e responsabilidade, mesmo em situações delicadas, é sempre o melhor caminho.
 
+# Depois do post
+
+O Reddit traduziu este post para o alemão, e foi assim que a Derya Janina Ay me encontrou. Hoje somos cofundadores do [friends67](https://friends67.com), um app para iPhone e Android em que você pede mais tempo de tela aos seus amigos.
+
 <!--
 Além disso, tive uma conversa com o criador do HTTP Toolkit. É uma ferramenta open source incrível, que me permitiu fazer o que fiz. Ela possui uma versão PRO com alguns recursos extras. Resolvi mandar um e-mail para o criador, explicando que eu sou estudante e como usei a ferramenta, e perguntei se seria possível obter uma licença da versão PRO gratuitamente; ele, de muito bom grado, aceitou.
 

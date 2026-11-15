@@ -3,6 +3,7 @@
 	import { Github, Instagram, Linkedin, Mail, ArrowRight } from "@lucide/svelte"
 	import type { Person, WebSite, WithContext } from "schema-dts"
 	import BlurFade from "$lib/components/BlurFade.svelte"
+	import { SITE_URL } from "$lib/site"
 
 	interface Post {
 		slug: string
@@ -29,7 +30,7 @@
 		{
 			label: "Email",
 			icon: Mail,
-			href: "mailto:vitor@vitordaniel.is-a.dev"
+			href: "mailto:vitor@vitordaniel.dev"
 		},
 		{
 			label: "WhatsApp",
@@ -47,10 +48,20 @@
 		"@context": "https://schema.org",
 		"@type": "Person",
 		name: "Vitor Daniel Lopes dos Santos",
-		url: "https://vitordaniel.is-a.dev",
+		url: SITE_URL,
 		image: "https://github.com/vadolasi.png",
 		jobTitle: "Desenvolvedor Web Full Stack",
-		additionalName: "vadolasi"
+		additionalName: "vadolasi",
+		worksFor: {
+			"@type": "Organization",
+			name: "friends67",
+			url: "https://friends67.com"
+		},
+		sameAs: [
+			"https://github.com/vadolasi",
+			"https://www.linkedin.com/in/vitordanieldevrn",
+			"https://www.instagram.com/vitordaniel.dev/"
+		]
 	})
 
 	const websiteSchema: WithContext<WebSite> = {
@@ -58,7 +69,7 @@
 		"@type": "WebSite",
 		name: "Vitor Daniel",
 		alternateName: ["Vitor Daniel Portfolio"],
-		url: "https://vitordaniel.is-a.dev"
+		url: SITE_URL
 	}
 
 	const jsonLdString = $derived(

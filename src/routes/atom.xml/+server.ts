@@ -1,3 +1,4 @@
+import { SITE_URL } from "$lib/site"
 import { Feed } from "feed"
 import { getFileDates } from "$lib/server/utils"
 import { processMarkdown, extractMetadata } from "$lib/server/markdown"
@@ -16,7 +17,7 @@ export async function GET() {
 		{ eager: true, query: "?url", import: "default" }
 	) as Record<string, string>
 
-	const siteUrl = "https://vitordaniel.is-a.dev"
+	const siteUrl = SITE_URL
 
 	const sortedPosts = (
 		await Promise.all(
@@ -87,7 +88,7 @@ export async function GET() {
 				{
 					name: "Vitor Daniel",
 					link: siteUrl,
-					email: "vitor@vitordaniel.is-a.dev"
+					email: "vitor@vitordaniel.dev"
 				}
 			],
 			content: post.html,

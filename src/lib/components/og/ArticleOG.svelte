@@ -12,7 +12,7 @@
 		style="flex:1;padding-right:32px;min-width:0;display:flex;flex-direction:column;"
 	>
 		<div style="font-size:20px;opacity:0.8;margin-bottom:8px;">
-			vitordaniel.is-a.dev
+			vitordaniel.dev
 		</div>
 		<h1 style="font-size:56px;line-height:1.02;margin:0;word-break:break-word;">
 			{title}

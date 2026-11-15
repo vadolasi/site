@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { SITE_URL } from "$lib/site"
 	import { ArrowLeft } from "@lucide/svelte"
 	import type { TechArticle, WithContext } from "schema-dts"
 	import { goto } from "$app/navigation"
@@ -55,8 +56,7 @@
 
 	const ogImageUrl = $derived.by(() => {
 		if (!coverImage?.img?.src) return null
-		const origin = page.url?.origin ?? ""
-		return `${origin}/images/blog/${page.params.slug}.png`
+		return `${SITE_URL}/images/blog/${page.params.slug}.png`
 	})
 
 	const htmlParts = $derived.by(() => {
@@ -76,11 +76,11 @@
 		image: coverImage?.img?.src ? [coverImage.img.src] : [],
 		description: description,
 		keywords: keywords,
-		url: page.url.href,
+		url: SITE_URL + page.url.pathname,
 		author: {
 			"@type": "Person",
 			name: "Vitor Daniel",
-			url: "https://vitordaniel.is-a.dev"
+			url: SITE_URL
 		},
 		datePublished: dates.created.toISOString(),
 		dateModified: dates.updated.toISOString(),
@@ -114,12 +114,10 @@
 	{/if}
 	<meta name="author" content="Vitor Daniel" />
 
-	<link rel="canonical" href={page.url.href} />
-
 	<meta property="og:type" content="article" />
 	<meta property="og:title" content={title} />
 	<meta property="og:description" content={description} />
-	<meta property="og:url" content={page.url.href} />
+	<meta property="og:url" content={SITE_URL + page.url.pathname} />
 
 	<meta name="twitter:title" content={title} />
 	<meta name="twitter:description" content={description} />

@@ -1,3 +1,4 @@
+import { SITE_URL } from "$lib/site"
 import { create } from "xmlbuilder2"
 import { getFileDates } from "$lib/server/utils"
 import { extractMetadata } from "$lib/server/markdown"
@@ -11,7 +12,7 @@ const postsModules = import.meta.glob("/src/content/posts/**/post.md", {
 })
 
 export async function GET() {
-	const siteUrl = "https://vitordaniel.is-a.dev"
+	const siteUrl = SITE_URL
 
 	const doc = create({ version: "1.0", encoding: "UTF-8" }).ele("urlset", {
 		xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9"

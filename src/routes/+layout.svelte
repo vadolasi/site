@@ -2,6 +2,7 @@
 	import { page } from "$app/state"
 	import "./layout.css"
 	import favicon from "$lib/assets/favicon.svg"
+	import { SITE_URL } from "$lib/site"
 
 	const { children } = $props()
 </script>
@@ -15,7 +16,7 @@
 		href="/atom.xml"
 	/>
 	<link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
-	<link rel="canonical" href={page.url.href} />
+	<link rel="canonical" href={SITE_URL + page.url.pathname} />
 	<meta property="og:site_name" content="Vitor Daniel" />
 	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>

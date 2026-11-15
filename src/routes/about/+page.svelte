@@ -71,7 +71,7 @@
 					<Download size={18} /> Baixar Currículo
 				</a>
 				<a
-					href="mailto:vitor@vitordaniel.is-a.dev"
+					href="mailto:vitor@vitordaniel.dev"
 					class="btn btn-outline btn-sm gap-2"
 				>
 					<Mail size={18} /> E-mail

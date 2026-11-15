@@ -24,12 +24,13 @@ export const entries: EntryGenerator = async () => {
 		.map((entry) => ({ slug: entry.slug ?? "" }))
 }
 
-export const GET: RequestHandler = async ({ params, url }) => {
-	const target = new URL(`/images/blog/${params.slug}.png`, url)
+// Caminho relativo: no build `url` vale http://sveltekit-prerender, e o
+// _redirects levaria esse domínio para o ar.
+export const GET: RequestHandler = async ({ params }) => {
 	return new Response(null, {
 		status: 302,
 		headers: {
-			location: target.toString()
+			location: `/images/blog/${params.slug}.png`
 		}
 	})
 }
